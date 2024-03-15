@@ -22,7 +22,8 @@ class SubjectController extends Controller
 
     public function index()
     {
-        return view('teacher.subjects.index');
+        $subjects = Subject::where('teacher_id', auth()->user()->id)->where('subject_id', '!=', null)->get();
+        return view('teacher.subjects.index', compact('subjects'));
     }
 
     public function importData(Request $request)
@@ -70,15 +71,14 @@ class SubjectController extends Controller
                 'subject_id' => $request->subject_id,
                 'student_id' => $student->student_id,
                 'name' => $student->name,
-                
+
             ]);
         }
 
-        
+
         Stu_list::where('teacher_id', Auth::id())->delete();
 
         Subject::create($input_subject);
-        return redirect()->route('subject.index')->with('success','Subject Created Successfully !');
-
+        return redirect()->route('subject.index')->with('success', 'Subject Created Successfully !');
     }
 }

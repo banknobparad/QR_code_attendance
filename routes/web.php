@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Attendance;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -25,14 +27,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
     Route::group(['prefix' => 'subject'], function () {
-        Route::post('subject-stu/import', [SubjectController::class, 'importData'])->name('subject.students.import');
-
+        
         Route::get('index', [SubjectController::class, 'index'])->name('subject.index');
         Route::get('create', [SubjectController::class, 'create'])->name('subject.create');
-
-        Route::get('getSubject', [SubjectController::class, 'getsubject'])->name('subject.get');
-
         
+        Route::get('getSubject', [SubjectController::class, 'getsubject'])->name('subject.get');
+        
+        
+        Route::post('subject-stu/import', [SubjectController::class, 'importData'])->name('subject.students.import');
         Route::post('store', [SubjectController::class, 'store'])->name('subject.store');
+    });
+
+    Route::group(['prefix' => 'attendance'], function () {
+        
+        Route::get('index', [AttendanceController::class, 'index'])->name('attendance.index');
     });
 });

@@ -203,6 +203,22 @@
         @if (Auth::user()->role == 'Student')
         <div>
             hello student
+            <video id="videoElement" autoplay></video>
+            <button id="startButton">Start Camera</button>
+            
+            <script>
+                const video = document.getElementById('videoElement');
+                const startButton = document.getElementById('startButton');
+                
+                startButton.addEventListener('click', async () => {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                        video.srcObject = stream;
+                    } catch (error) {
+                        console.error('Error accessing camera:', error);
+                    }
+                });
+            </script>
         </div>
         @endif
     </div>

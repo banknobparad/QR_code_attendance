@@ -67,6 +67,7 @@
                                         href="{{-- {{ route('users.index') }} --}}">{{ __('Administrator') }}</a>
                                 </li>
                             @endif
+
                             @if (Auth::user()->role == 'Teacher')
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeTeacher')"
@@ -76,7 +77,12 @@
                                     <a class="nav-link  @yield('activeSubject')"
                                         href="{{ route('subject.index') }}">{{ __('Subject') }}</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  @yield('activeAttendance')"
+                                        href="{{ route('attendance.index') }}">{{ __('Attendance') }}</a>
+                                </li>
                             @endif
+
                             @if (Auth::user()->role == 'Student')
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeStudent')"

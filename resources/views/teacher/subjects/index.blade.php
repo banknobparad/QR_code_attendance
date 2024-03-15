@@ -1,19 +1,14 @@
 @extends('layouts.app')
 @section('title')
+    Subject
+@endsection
 
+@section('activeSubject')
+    active border-2 border-bottom border-primary
+@endsection
 
 @section('content')
-    <style>
-        .subject_id_error {
-            font-size: 18px;
-            box-sizing: border-box;
-        }
 
-        .subject_name_error {
-            font-size: 18px;
-            box-sizing: border-box;
-        }
-    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -43,7 +38,21 @@
                                         <th scope="row" class="text-center">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    @foreach ($subjects as $item)
+                                        <tr>
+
+                                            <td>#</td>
+                                            <td>{{ $item->subject_id }}</td>
+                                            <td>{{ $item->subject_name }}</td>
+                                            <td class="text-center">
+                                                <a href="" class="btn btn-sm btn-info"><i class="fa-regular fa-eye"></i></a>
+                                                <a href="" class="btn btn-sm btn-success"><i
+                                                        class="fa-regular fa-pen-to-square"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -52,12 +61,7 @@
             </div>
         </div>
     </div>
-
-
-
 @endsection
 
 @section('scripts')
-
-
 @endsection
