@@ -32,7 +32,7 @@
                                     @foreach ($subjects as $item)
                                         <option value="{{ $item->id }}"
                                             {{ old('ctgy_book') == $item->id ? 'selected' : '' }}>
-                                            {{ $item->name_book }}
+                                            {{ $item->name }}
                                         </option>
                                     @endforeach
                                 </select>
