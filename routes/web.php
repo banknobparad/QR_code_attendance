@@ -3,6 +3,7 @@
 use App\Http\Controllers\Attendance;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\QrcodeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,6 +33,10 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
         Route::get('create', [SubjectController::class, 'create'])->name('subject.create');
         
         Route::get('getSubject', [SubjectController::class, 'getsubject'])->name('subject.get');
+        
+
+        Route::post('qrcode/created', [QrcodeController::class, 'store'])->name('qrcode.store');
+
         
         
         Route::post('subject-stu/import', [SubjectController::class, 'importData'])->name('subject.students.import');

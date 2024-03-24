@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject_stu;
+use App\Models\Subject;
+use App\Models\Year;
+use App\Models\Branch;
+use App\Models\Qrcode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,8 +14,11 @@ class AttendanceController extends Controller
 {
     public function index(){
 
-        $subjects = Subject_stu::where('teacher_id', Auth::id())->get();
+        $subjects = Subject::all();
+        $years = Year::all();
+        $branchs = Branch::all();
 
-        return view('teacher.attendance.index', compact('subjects'));
+        $qrcodes = Qrcode::all();
+        return view('teacher.attendance.index', compact('subjects','years','branchs','qrcodes'));
     }
 }
