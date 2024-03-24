@@ -127,15 +127,26 @@ active border-2 border-bottom border-primary
       <th scope="col">QR Code</th>
       <th scope="col">วิชา</th>
       <th scope="col">แผนก</th>
+      <th scope="col">เวลาเช็คชื่อ</th>
+      <th scope="col">เวลาเช็คชื่อสาย</th>
+      <th scope="col">เวลาสิ้นสุดเช็คชื่อ</th>
+
     </tr>
   </thead>
   <tbody>
     @foreach ($qrcodes as $index => $qrcode)
+    @php
+        $index ++;
+    @endphp
     <tr>
       <th scope="row">{{$index}}</th>
       <td>{!! QrCode::size(100)->generate($qrcode->id) !!}</td>
-      <td>{{$qrcode->subject_id}}</td>
-      <td>{{$qrcode->branch_id}}</td>
+      <td>{{$qrcode->subject->subject_name}}</td>
+      <td>{{$qrcode->branch->name}}</td>
+      <td>{{$qrcode->start_time}}</td>
+      <td>{{$qrcode->late_time}}</td>
+      <td>{{$qrcode->end_time}}</td>
+
     </tr>
     @endforeach
    
