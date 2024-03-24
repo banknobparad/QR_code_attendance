@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Qrcode;
+use Carbon\Carbon;
 
 class QrcodeController extends Controller
 {
@@ -34,4 +35,42 @@ class QrcodeController extends Controller
         return redirect()->back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     
     }
+
+    public function scan($id)
+    {
+        // ค้นหาข้อมูล Qrcode จาก ID ที่ระบุ
+        $qrcode = Qrcode::findOrFail($id);
+
+        // ตรวจสอบว่า Qrcode ถูกสร้างขึ้นโดยใช้ subject_id และ branch_id
+        if (!$qrcode->subject_id || !$qrcode->branch_id) {
+            return redirect()->back()->with('error', 'Qrcode is not properly configured');
+        }
+
+        // ตรวจสอบเวลาเริ่มเช็คชื่อ
+        $now = Carbon::now();
+        $start_time = Carbon::createFromFormat('Y-m-d H:i:s', $qrcode->start_time);
+
+        if ($now->lt($start_time)) {
+            return redirect()->back()->with('error', 'It is not yet time to check in');
+        }
+
+        // ตรวจสอบเวลาเริ่มเช็คเข้าเรียนสาย
+        $late_time = Carbon::createFromFormat('Y-m-d H:i:s', $qrcode->late_time);
+
+        // ตรวจสอบว่าผู้ใช้มาสายหรือไม่
+        $status = $now->lt($late_time) ? 'present' : 'late';
+
+        // สร้างการเช็คชื่อใหม่
+        $checking = new Checking();
+        $checking->qrcode_id = $qrcode->id;
+        // ใส่ student_id หรือทำการตรวจสอบการเช็คชื่อกับผู้ใช้ที่ล็อกอินอยู่
+        $checking->student_id = auth()->user()->id;
+        $checking->status = $status; // สถานะจะเป็น "สาย" หากผู้ใช้มาสาย
+        $checking->subject_id = $qrcode->subject_id;
+        $checking->branch_id = $qrcode->branch_id;
+        $checking->save();
+
+        return redirect()->back()->with('success', 'Checking successfully recorded');
+    }
+
 }

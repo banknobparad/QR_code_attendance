@@ -26,6 +26,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/student/qrcode/checking/{id}', [QrcodeController::class, 'scan'])->name('qrcode.scan');
+
+
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
     Route::group(['prefix' => 'subject'], function () {
         

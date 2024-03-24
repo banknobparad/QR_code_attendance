@@ -140,7 +140,8 @@ active border-2 border-bottom border-primary
     @endphp
     <tr>
       <th scope="row">{{$index}}</th>
-      <td>{!! QrCode::size(100)->generate($qrcode->id) !!}</td>
+      <td>{!! QrCode::size(100)->generate(url('/student/qrcode/checking' . $qrcode->id)) !!}</td>
+
       <td>{{$qrcode->subject->subject_name}}</td>
       <td>{{$qrcode->branch->name}}</td>
       <td>{{$qrcode->start_time}}</td>
