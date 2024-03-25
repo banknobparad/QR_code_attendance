@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Qrcode;
+use App\Models\QrcodeCheck;
 use Carbon\Carbon;
 
 class QrcodeController extends Controller
@@ -48,20 +49,20 @@ class QrcodeController extends Controller
 
         // ตรวจสอบเวลาเริ่มเช็คชื่อ
         $now = Carbon::now();
-        $start_time = Carbon::createFromFormat('Y-m-d H:i:s', $qrcode->start_time);
+        $start_time = Carbon::createFromFormat('H:i', $qrcode->start_time);
 
         if ($now->lt($start_time)) {
             return redirect()->back()->with('error', 'It is not yet time to check in');
         }
 
         // ตรวจสอบเวลาเริ่มเช็คเข้าเรียนสาย
-        $late_time = Carbon::createFromFormat('Y-m-d H:i:s', $qrcode->late_time);
+        $late_time = Carbon::createFromFormat('H:i', $qrcode->late_time);
 
         // ตรวจสอบว่าผู้ใช้มาสายหรือไม่
         $status = $now->lt($late_time) ? 'present' : 'late';
 
         // สร้างการเช็คชื่อใหม่
-        $checking = new Checking();
+        $checking = new QrcodeCheck();
         $checking->qrcode_id = $qrcode->id;
         // ใส่ student_id หรือทำการตรวจสอบการเช็คชื่อกับผู้ใช้ที่ล็อกอินอยู่
         $checking->student_id = auth()->user()->id;
