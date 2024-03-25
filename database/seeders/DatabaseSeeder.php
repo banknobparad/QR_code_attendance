@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
                 ['name' => 'สาขาภูมิสารสนเทศ', 'branch' => '4'],
             ]);
     
+            
             //create years (ปี)
             Year::insert([
                 ['name' => 'นักศึกษาชั้นปีที่ 1', 'year' => '1'],
