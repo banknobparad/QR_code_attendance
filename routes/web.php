@@ -26,6 +26,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
+
+
+
 Route::get('/student/qrcode/checking/{id}', [QrcodeController::class, 'scan'])->name('qrcode.scan');
 
 
@@ -40,7 +44,7 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
 
         Route::post('qrcode/created', [QrcodeController::class, 'store'])->name('qrcode.store');
 
-        
+        Route::get('/report/check', [App\Http\Controllers\ReportCheckController::class, 'index'])->name('report.check.index');
         
         Route::post('subject-stu/import', [SubjectController::class, 'importData'])->name('subject.students.import');
         Route::post('store', [SubjectController::class, 'store'])->name('subject.store');

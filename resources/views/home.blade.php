@@ -230,7 +230,6 @@ html5QrcodeScanner.render(onScanSuccess, onScanFailure);
             </script>
             
         </div>
-        @endif
         <p class="text-center">เวลาปัจจุบัน: {{ date('H:i:s') }}</p>
 
         <h3 class="mt-3">ประวัติเช็คชื่อวันนี้</h3>
@@ -276,6 +275,8 @@ html5QrcodeScanner.render(onScanSuccess, onScanFailure);
    
   </tbody>
 </table>
+@endif
+
     </div>
 
 

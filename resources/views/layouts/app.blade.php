@@ -81,6 +81,10 @@
                                     <a class="nav-link  @yield('activeAttendance')"
                                         href="{{ route('attendance.index') }}">{{ __('Attendance') }}</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  @yield('activeReport')"
+                                        href="{{ route('report.check.index') }}">{{ __('รายงานเช็คชื่อ') }}</a>
+                                </li>
                             @endif
 
                             @if (Auth::user()->role == 'Student')
