@@ -109,7 +109,7 @@ class RegisterController extends Controller
             'branch_id' => $data['branch_id'] ?? null,
             'year_id' => $data['year_id'] ?? null,
             'phone_number' => $data['phone_number'] ?? null,
-            'email_verified_at' => now(), 
+            'email_verified_at' => now(),
         ]);
     }
 

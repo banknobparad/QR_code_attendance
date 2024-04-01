@@ -14,10 +14,10 @@ class StudentImport implements ToCollection
     */
     public function collection(Collection $rows)
     {
-        $user = User::where('id', auth()->user()->id)->firstOrFail(); 
-        $teacher_id = $user->id; 
+        $user = User::where('id', auth()->user()->id)->firstOrFail();
+        $teacher_id = $user->id;
 
-        foreach ($rows as $row) 
+        foreach ($rows as $row)
         {
             Stu_list::create([
                 'teacher_id' => $teacher_id,
