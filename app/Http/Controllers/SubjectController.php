@@ -28,6 +28,12 @@ class SubjectController extends Controller
         return view('teacher.subjects.index', compact('subjects'));
     }
 
+    public function getStudents($subject_id)
+{
+    $students = Subject::findOrFail($subject_id)->subject_stu;
+    return response()->json(['students' => $students]);
+}
+
     public function importData(Request $request)
     {
         $this->validate(

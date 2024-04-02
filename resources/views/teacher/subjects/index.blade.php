@@ -47,8 +47,7 @@
                                                 <a href="#" class="btn btn-sm btn-info show_details"
                                                     data-bs-toggle="modal" data-bs-target="#SubjectDetailsModel"
                                                     data-subject_id="{{ $item->subject_id }}"
-                                                    data-subject_name="{{ $item->subject_name }}"
-                                                    data-subject_stus="{{ json_encode($item->subject_stus) }}">
+                                                    data-subject_name="{{ $item->subject_name }}">
                                                     <i class="fa-regular fa-eye"></i>
                                                 </a>
 
@@ -61,6 +60,7 @@
 
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>
@@ -80,10 +80,6 @@
                         <p>ชื่อวิขา: <span id="subject_name"></span></p>
                         <p>รหัสวิชา: <span id="subject_id"></span></p>
                         <hr>
-                        <!-- เพิ่มส่วนนี้เพื่อแสดงรายชื่อนักเรียน -->
-                        <div id="student_list">
-                            <!-- รายชื่อนักเรียนจะแสดงที่นี่ -->
-                        </div>
                     </div>
                 </div>
             </div>
@@ -98,26 +94,12 @@
 
                     var subject_id = $(this).data('subject_id');
                     var subject_name = $(this).data('subject_name');
-                    var subject_stus = $(this).data('subject_stus');
+                    var subject_name = $(this).data('subject_name');
 
                     $('#subject_id').text(subject_id);
                     $('#subject_name').text(subject_name);
 
-                    // ตรวจสอบว่ามีข้อมูลนักเรียนหรือไม่
-                    if (subject_stus && subject_stus.length > 0) {
-                        // แสดงรายชื่อนักเรียน
-                        var studentList = '';
-                        $.each(subject_stus, function(index, student) {
-                            studentList += '<p>' + student.student_code + ': ' + student.student_name +
-                                '</p>';
-                        });
 
-                        $('#student_list').html(studentList);
-                    } else {
-                        $('#student_list').html('<p>No students found</p>'); // ถ้าไม่มีข้อมูลนักเรียน
-                    }
-
-                    $('#SubjectDetailsModel').modal('show');
                 });
             });
         </script>

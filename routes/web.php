@@ -29,6 +29,9 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
     Route::group(['prefix' => 'subject'], function () {
 
         Route::get('index', [SubjectController::class, 'index'])->name('subject.index');
+        Route::get('get-students/{subject_id}', [SubjectController::class, 'getStudents'])->name('subject.getStudents');
+
+
         Route::get('create', [SubjectController::class, 'create'])->name('subject.create');
 
         Route::get('getSubject', [SubjectController::class, 'getsubject'])->name('subject.get');

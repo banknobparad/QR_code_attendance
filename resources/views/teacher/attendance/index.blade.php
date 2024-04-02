@@ -31,13 +31,13 @@
                                     <option value="" selected disabled>{{ __('เลือกวิชาที่สอน') }}</option>
                                     @foreach ($subjects as $item)
                                         <option value="{{ $item->id }}"
-                                            {{ old('ctgy_book') == $item->id ? 'selected' : '' }}>
-                                            {{ $item->name_book }}
+                                            {{ old('subject_name') == $item->id ? 'selected' : '' }}>
+                                            {{ $item->subject_name }}
                                         </option>
                                     @endforeach
                                 </select>
 
-                                @error('ctgy_book')
+                                @error('subject_name')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
