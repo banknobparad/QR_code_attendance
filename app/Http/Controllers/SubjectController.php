@@ -29,10 +29,10 @@ class SubjectController extends Controller
     }
 
     public function getStudents($subject_id)
-{
-    $students = Subject::findOrFail($subject_id)->subject_stu;
-    return response()->json(['students' => $students]);
-}
+    {
+        $students = Subject::findOrFail($subject_id)->subject_stu;
+        return response()->json(['students' => $students]);
+    }
 
     public function importData(Request $request)
     {
@@ -239,4 +239,12 @@ class SubjectController extends Controller
         return redirect()->back()->with('importDelete', 'Delect Successfull.!');
     }
 
+    public function delete($id)
+    {
+
+        Subject::where('id', $id)->where('teacher_id', Auth::id())->delete();
+
+        // dd($id);
+        return redirect()->back()->with('importDelete', 'Delect Successfull.!');
+    }
 }

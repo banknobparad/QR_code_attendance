@@ -53,12 +53,22 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
         Route::post('subject-stu/update/edit', [SubjectController::class, 'updateedit'])->name('subject.students.updateinedit');
 
         Route::get('/edit/subject-stu/delete/{id}',[SubjectController::class, 'editDelete'])->name('subject.students.editdelete');
-
+        Route::get('subject-stu/delete/{id}',[SubjectController::class, 'delete'])->name('subject.students.homedelete');
 
     });
 
     Route::group(['prefix' => 'attendance'], function () {
 
+
+        Route::get('home', [AttendanceController::class, 'home'])->name('attendance.home');
         Route::get('index', [AttendanceController::class, 'index'])->name('attendance.index');
+        Route::get('showQRcode', [AttendanceController::class, 'showQRcode'])->name('attendance.showQRcode');
+
+        Route::post('qrcode/created', [AttendanceController::class, 'store'])->name('attendance.qrcode.store');
+
+
+
+        Route::post('/update-status' , [AttendanceController::class, 'updateStatus'])->name('attendance.updateStatus');
+
     });
 });

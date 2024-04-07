@@ -2,7 +2,10 @@
 
 namespace App\Http;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Support\Facades\Schema;
+
 
 class Kernel extends HttpKernel
 {
@@ -40,7 +43,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -68,6 +71,8 @@ class Kernel extends HttpKernel
         'teacher' => \App\Http\Middleware\Teacher::class,
 
         'adminOrTeacher' => \App\Http\Middleware\AdminOrTeacher::class,
-        
+
     ];
+
+
 }

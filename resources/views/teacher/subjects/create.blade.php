@@ -50,7 +50,11 @@
                     @csrf
                     <div class="form-group col-lg-6">
                         <label class="form-control-label" for="form-group-input">รหัสวิชา</label>
-                        <input type="text" class="form-control" id="form-group-input" name="subject_id">
+                        <input type="text" class="form-control" id="form-group-input" name="subject_id"
+                            value="{{ old('subject_id') }}">
+                        @error('subject_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
 
                         @error('subject_id')
                             <span class="text-danger">{{ $message }}</span>
@@ -58,7 +62,8 @@
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="form-control-label" for="form-group-input">ชื่อวิชา</label>
-                        <input type="text" class="form-control" id="form-group-input" name="subject_name">
+                        <input type="text" class="form-control" id="form-group-input" name="subject_name"
+                            value="{{ old('subject_name') }}">
 
                         @error('subject_name')
                             <span class="text-danger">{{ $message }}</span>
@@ -181,14 +186,16 @@
                                                     <tbody>
                                                         @foreach ($data as $row)
                                                             <tr role="row" class="odd">
-                                                                <td style="display:none;" class="idUpdate">{{ $row->id }}</td>
+                                                                <td style="display:none;" class="idUpdate">
+                                                                    {{ $row->id }}</td>
                                                                 <td class="Student_id">{{ $row->student_id }}</td>
                                                                 <td class="Name">{{ $row->name }}</td>
                                                                 <td class="text-center">
                                                                     <a class="m-r-15 text-muted importEdit"
                                                                         data-toggle="modal" data-idUpdate="'.$row->id.'"
                                                                         data-target="#ImportUpdate">Edit</a>
-                                                                        <a href="javascript:void(0)" class="delete-item" data-id="{{ $row->id }}">Delete</a>
+                                                                    <a href="javascript:void(0)" class="delete-item"
+                                                                        data-id="{{ $row->id }}">Delete</a>
 
                                                                 </td>
                                                             </tr>
@@ -263,7 +270,7 @@
                                                         <span aria-hidden="true"><i class="ti-close"></i></span>
                                                     </button>
                                                 </div>
-                                                <form action="{{route('subject.students.update')}}" method = "post">
+                                                <form action="{{ route('subject.students.update') }}" method = "post">
                                                     <!-- form delete -->
                                                     @csrf
                                                     <input type = "text"hidden class="col-sm-9 form-control"id="idUpdate"
@@ -334,7 +341,7 @@
                 });
             });
         });
-        </script>
+    </script>
 
     <script>
         $(document).ready(function() {

@@ -22,6 +22,13 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -79,7 +86,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeAttendance')"
-                                        href="{{ route('attendance.index') }}">{{ __('Attendance') }}</a>
+                                        href="{{ route('attendance.home') }}">{{ __('Attendance') }}</a>
                                 </li>
                             @endif
 
@@ -113,7 +120,7 @@
             </div>
         </nav>
 
-        <main class="container py-4">
+        <main class="container py-3">
             @yield('content')
         </main>
     </div>
@@ -128,6 +135,19 @@
 
     <!-- SweetAlert2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+    <!-- DataTables Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/3.0.1/js/dataTables.responsive.js"></script>
+    <script src="https://cdn.datatables.net/responsive/3.0.1/js/responsive.bootstrap5.js"></script>
 
     @yield('scripts')
 

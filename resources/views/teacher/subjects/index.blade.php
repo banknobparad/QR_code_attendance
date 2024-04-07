@@ -54,6 +54,11 @@
                                                 <a href="{{ route('subject.showedit', $item->subject_id) }}"
                                                     class="btn btn-sm btn-success"><i
                                                         class="fa-regular fa-pen-to-square"></i></a>
+
+                                                <a href="{{ route('subject.students.homedelete', $item->id) }}"
+                                                    class="btn btn-sm btn-danger delete-btn"><i
+                                                        class="fa-regular fa-trash-can"></i></a>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -87,6 +92,38 @@
     @endsection
 
     @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // เลือกปุ่มลบ
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+
+                // กำหนดการทำงานเมื่อคลิกที่ปุ่มลบ
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault(); // ยกเลิกการดำเนินการค่าเริ่มต้นของลิงก์
+
+                        // แสดง SweetAlert2 เพื่อยืนยันการลบ
+                        Swal.fire({
+                            title: 'คุณแน่ใจหรือไม่?',
+                            text: "คุณต้องการที่จะลบรายการนี้หรือไม่?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'ใช่, ลบ!',
+                            cancelButtonText: 'ยกเลิก'
+                        }).then((result) => {
+                            // หากผู้ใช้ยืนยันการลบ
+                            if (result.isConfirmed) {
+                                // นำผู้ใช้ไปยัง URL ที่ระบุเพื่อลบ
+                                window.location.href = button.getAttribute('href');
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
         <script>
             $(document).ready(function() {
                 $('.show_details').click(function(e) {
