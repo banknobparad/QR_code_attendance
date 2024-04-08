@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Qrcode_check extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'status',
+    ];
     function student()
     {
         return $this->belongsTo('App\Models\Subject_stu', 'student_id', 'student_id');

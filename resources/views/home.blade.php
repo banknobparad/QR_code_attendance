@@ -50,7 +50,16 @@
         background: transparent;
     }
 </style>
-
+<style>
+    #realTimeClock {
+        font-size: 24px;
+        color: #333;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
 
 @section('content')
@@ -236,7 +245,7 @@
                 </script>
 
             </div>
-            <p class="text-center">เวลาปัจจุบัน: {{ date('H:i:s') }}</p>
+            <p class="text-center">เวลาปัจจุบัน: <span id="realTimeClock"></span></p>
 
             <h3 class="mt-3">ประวัติเช็คชื่อวันนี้</h3>
             <table class="table table-bordered">
@@ -253,7 +262,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($checkings as $index => $checking)
+                    {{-- @foreach ($checkings as $index => $checking)
                         @php
                             $index++;
                         @endphp
@@ -277,7 +286,7 @@
 
 
                         </tr>
-                    @endforeach
+                    @endforeach --}}
 
                 </tbody>
             </table>
@@ -305,7 +314,29 @@
         </script>
     @endif
 
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
 
+            hours = padZero(hours);
+            minutes = padZero(minutes);
+            seconds = padZero(seconds);
+
+            var timeString = hours + ":" + minutes + ":" + seconds;
+            document.getElementById('realTimeClock').innerHTML = timeString;
+
+            requestAnimationFrame(updateClock);
+        }
+
+        function padZero(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+
+        requestAnimationFrame(updateClock);
+    </script>
 
     {{-- <script>
         $(document).ready(function() {

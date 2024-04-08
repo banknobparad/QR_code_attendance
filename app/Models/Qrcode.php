@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\AttendanceUpdatedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,11 @@ class Qrcode extends Model
     function qrcode_student()
     {
         return $this->hasMany('App\Models\Subject_stu', 'subject_id', 'subject_id');
+    }
+
+    public function broadcastAttendanceUpdated()
+    {
+        event(new AttendanceUpdatedEvent($this->id));
     }
 
 

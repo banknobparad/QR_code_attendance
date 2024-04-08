@@ -1,21 +1,57 @@
 @extends('layouts.app')
 @section('title')
 @section('content')
+    <style>
+        #realTimeClock {
+            font-size: 24px;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .TimeClock {
+            font-size: 24px;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
+        .time {
+            font-size: 24px;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 
     @foreach ($qrcodes as $index => $qrcode)
         <div class="container d-flex flex-column">
             <div class="card m-2">
                 <div class="card-header">
-                    <h4 class="card-title">สแกน QRcode เพื่อเช็คชื่อเข้าเรียน วิชา :
-                        {{ $qrcode->qrcode_subject->subject_name }}</h4>
+                    <h3 class="card-title">สแกน QRcode เพื่อเช็คชื่อเข้าเรียน วิชา :
+                        {{ $qrcode->qrcode_subject->subject_name }}</h3>
 
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-5 text-center">
-                            <td>{!! QrCode::size(300)->generate(url('/student/qrcode/checking/' . $qrcode->id)) !!}</td>
+                            <p>{!! QrCode::size(350)->generate(url('/student/qrcode/checking/' . $qrcode->id)) !!}</p>
+                            <br>
 
+                            <p class="time">เวลาปัจจุบัน: <span id="realTimeClock"></span> น.</p>
+
+
+                            <p class="time">
+                                เวลาเริ่มเช็คชื่อ : <span class="TimeClock">{{ $qrcode->start_time }}</span> น.
+                            </p>
+                            <p class="time">
+                                เวลาสาย : <span class="TimeClock">{{ $qrcode->late_time }}</span> น.
+                            </p>
                         </div>
                         <div class="col-md-7">
                             <div class="row">
@@ -33,9 +69,8 @@
                                     <div class="card text-white bg-success mb-3">
                                         <div class="card-body">
                                             <h5 class="card-title">เข้าเรียนปกติ</h5>
-                                            <p class="card-text">จำนวน:
-                                                {{ $qrcode->qrcode_checks->where('status', 'มา')->count() }} คน
-                                            </p>
+                                            <p class="card-text" id="normalAttendanceCount">จำนวน:
+                                                {{ $qrcode->qrcode_checks->where('status', 'มา')->count() }} คน</p>
                                         </div>
                                     </div>
                                 </div>
@@ -43,9 +78,9 @@
                                     <div class="card text-white mb-3" style="background-color: #e2ab04">
                                         <div class="card-body">
                                             <h5 class="card-title">เข้าเรียนสาย</h5>
-                                            <p class="card-text">จำนวน:
-                                                {{ $qrcode->qrcode_checks->where('status', 'มาสาย')->count() }} คน
-                                            </p>
+                                            <p class="card-text" id="lateAttendanceCount">จำนวน:
+                                                {{ $qrcode->qrcode_checks->where('status', 'มาสาย')->count() }}
+                                                คน</p>
                                         </div>
                                     </div>
                                 </div>
@@ -53,8 +88,10 @@
                                     <div class="card text-white bg-danger mb-3">
                                         <div class="card-body">
                                             <h5 class="card-title">ขาดเรียน</h5>
-                                            <p class="card-text">จำนวน:
-                                                {{ $qrcode->qrcode_checks->whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count() }} คน
+                                            <p class="card-text" id="absentAttendanceCount">จำนวน:
+                                                {{ $qrcode->qrcode_checks->whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count() }}
+                                                คน
+
                                             </p>
                                         </div>
                                     </div>
@@ -111,7 +148,11 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">ขณะนี้เวลา 23:09:16</small>
+                    <small class="text-muted">
+                        <div class="btn btn-sm btn-info">
+                            sdf
+                        </div>
+                    </small>
                 </div>
             </div>
         </div>
@@ -121,6 +162,29 @@
 @endsection
 
 @section('scripts')
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            hours = padZero(hours);
+            minutes = padZero(minutes);
+            seconds = padZero(seconds);
+
+            var timeString = hours + ":" + minutes + ":" + seconds;
+            document.getElementById('realTimeClock').innerHTML = timeString;
+
+            requestAnimationFrame(updateClock);
+        }
+
+        function padZero(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+
+        requestAnimationFrame(updateClock);
+    </script>
     <script>
         $(document).ready(function() {
             $('#qrcodeChecksTable').DataTable({
@@ -145,19 +209,46 @@
                     data: {
                         id: id,
                         status: status,
-                        student_id: $(this).data('student-id'),
-                        student_name: $(this).data('student-name'),
+                        student_id: $(this).data('student-id'), // เพิ่ม student_id ตรงนี้
+                        student_name: $(this).data('student-name'), // เพิ่ม student_name ตรงนี้
                         _token: token
                     },
                     success: function(response) {
+                        // อัปเดตจำนวนการเข้าเรียนโดยไม่ต้องรีโหลดหน้า
+                        $('#normalAttendanceCount').html('จำนวน: ' + response.normalCount +
+                            ' คน');
+                        $('#lateAttendanceCount').html('จำนวน: ' + response.lateCount + ' คน');
+                        $('#absentAttendanceCount').html('จำนวน: ' + response.absentCount +
+                            ' คน');
+
                         Swal.fire({
                             icon: 'success',
                             title: 'เปลี่ยนสถานะสำเร็จ!',
                             html: `${response.student_name} รหัส ${response.student_id} : ${response.status}`
                         });
-                    } // ปิดวงเล็บ success ที่นี่
-                }); // ปิดวงเล็บ ajax ที่นี่
+                    }
+                });
             });
+        });
+    </script>
+
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+        // เชื่อมต่อกับ Pusher โดยใช้ข้อมูลจาก .env
+        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+            encrypted: true
+        });
+
+        // สมัครสมาชิกสำหรับช่อง 'attendance-updates'
+        var channel = pusher.subscribe('attendance-updates');
+
+        // กำหนดการปรับปรุงข้อมูลเมื่อมีข้อมูลใหม่ถูกส่งมา
+        channel.bind('App\\Events\\AttendanceUpdated', function(data) {
+            // อัพเดทข้อมูลใน div ตามที่คุณต้องการ
+            document.getElementById('normalAttendanceCount').innerText = 'จำนวน: ' + data.normal + ' คน';
+            document.getElementById('lateAttendanceCount').innerText = 'จำนวน: ' + data.late + ' คน';
+            document.getElementById('absentAttendanceCount').innerText = 'จำนวน: ' + data.absent + ' คน';
         });
     </script>
 

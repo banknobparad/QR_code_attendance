@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AttendanceUpdated;
 use App\Models\Qrcode;
 use App\Models\Qrcode_all;
 use App\Models\Qrcode_check;
@@ -12,12 +13,17 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Scheduler;
+use Maatwebsite\Excel\Concerns\ToArray;
 // use Illuminate\Support\Facades\Scheduler;
 
 
 
 class AttendanceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function home()
     {
         return view('teacher.attendance.home');
@@ -117,22 +123,76 @@ class AttendanceController extends Controller
         // ทำการอัปเดตค่า status ใน database
         Qrcode_check::where('id', $id)->update(['status' => $status]);
 
+        // นับจำนวนการเข้าเรียนใหม่หลังการอัปเดต
+        $normalCount = Qrcode_check::where('status', 'มา')->count();
+        $lateCount = Qrcode_check::where('status', 'มาสาย')->count();
+        $absentCount = Qrcode_check::whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count();
+
+
+
         return response()->json([
             'status' => $status,
             'student_id' => $student_id,
-            'student_name' => $student_name
+            'student_name' => $student_name,
+            'normalCount' => $normalCount,
+            'lateCount' => $lateCount,
+            'absentCount' => $absentCount,
         ]);
     }
 
-    // public function scan(Request $request, $id)
-    // {
-    //     $qrCode = QRCode::findOrFail($id);
+    public function updateAttendance()
+    {
+        // Update attendance counts
+        $normalCount = Qrcode_check::where('status', 'มา')->count();
+        $lateCount = Qrcode_check::where('status', 'มาสาย')->count();
+        $absentCount = Qrcode_check::whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count();
 
-    //     if ($qrCode->isExpired()) {
-    //         return response()->json(['error' => 'QR Code นี้หมดอายุแล้ว'], 400);
-    //     }
+        // Broadcast updated counts
+        broadcast(new AttendanceUpdated([
+            'normal' => $normalCount,
+            'late' => $lateCount,
+            'absent' => $absentCount,
+        ]));
+    }
 
-    //     // อนุญาตให้สแกน QR Code
+    public function checkQrCode($qrcode_id)
+    {
+        $user = auth()->user(); // รับข้อมูลผู้ใช้ที่เข้าสู่ระบบ
+        $qrcode = Qrcode::find($qrcode_id);
 
-    // }
+        // ตรวจสอบว่ามีข้อมูลของ Qrcode และผู้ใช้ที่เข้าสู่ระบบหรือไม่
+        if (!$qrcode || !$user) {
+            return response()->json(['message' => 'ไม่พบข้อมูล'], 404);
+        }
+
+        // ตรวจสอบว่าผู้ใช้ที่เข้าสู่ระบบเป็นนักศึกษาหรือไม่
+        if ($user->role != 'Student') {
+            return response()->json(['message' => 'คุณไม่มีสิทธิ์เข้าถึง'], 403);
+        }
+
+        // ตรวจสอบว่ามีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบหรือไม่
+        $qrcodeCheck = Qrcode_check::where('student_id', $user->student_id)->first();
+
+        // dd($user);
+
+        // ถ้ามีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบ
+        if ($qrcodeCheck) {
+            // ตรวจสอบเวลา
+            $currentTime = Carbon::now();
+            $lateTime = Carbon::parse($qrcode->late_time);
+
+            // ตรวจสอบว่าสแกน QR code ก่อนหรือหลังเวลา late_time
+            $status = ($currentTime->lte($lateTime)) ? 'มา' : 'มาสาย';
+
+            // ทำการอัปเดตข้อมูลเฉพาะฟิลด์ status ใน table qrcode_checks
+            $qrcodeCheck->update([
+                'status' => $status,
+            ]);
+
+            return response()->json(['message' => 'อัปเดตข้อมูลเรียบร้อย'], 200);
+        }
+
+        // ถ้าไม่มีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบ
+        return response()->json(['message' => 'ไม่พบข้อมูลในระบบ'], 404);
+    }
 }
