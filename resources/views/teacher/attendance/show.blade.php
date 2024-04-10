@@ -10,6 +10,7 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .TimeClock {
             font-size: 24px;
             color: #333;
@@ -27,6 +28,58 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* พื้นหลังที่มืดลง */
+            z-index: 9999;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 75%;
+            /* เพิ่มบรรทัดนี้เพื่อจำกัดความกว้างสูงสุด */
+            max-height: 75%;
+            /* เพิ่มบรรทัดนี้เพื่อจำกัดความสูงสูงสุด */
+            overflow: auto;
+            /* เพิ่มบรรทัดนี้เพื่อเป็นการเปิดใช้งานการสแครลการเลื่อน */
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 2px;
+            /* ปรับ top เพื่อย้ายปุ่มปิดขึ้นมาใกล้ขอบบน */
+            right: 15px;
+            /* ปรับ right เพื่อให้ปุ่มปิดอยู่ใกล้ขอบขวา */
+            cursor: pointer;
+            font-size: 24px;
+            /* เพิ่มขนาดตัวอักษร */
+            color: #aaa;
+        }
+
+        .qr-code-container {
+            border: 2px solid #ccc;
+            /* สร้างเส้นขอบสีเทา */
+            padding: 15px;
+            /* เพิ่มช่องว่างรอบ QR code */
+            display: inline-block;
+            /* ทำให้ div มีขนาดตามเนื้อหาภายใน */
+
+            border-radius: 10px;
+
+        }
     </style>
 
     @foreach ($qrcodes as $index => $qrcode)
@@ -40,19 +93,44 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-5 text-center">
-                            <p>{!! QrCode::size(350)->generate(url('/student/qrcode/checking/' . $qrcode->id)) !!}</p>
-                            <br>
-
-                            <p class="time">เวลาปัจจุบัน: <span id="realTimeClock"></span> น.</p>
+                            <div class="card m-2">
+                                <div class="card-body">
 
 
-                            <p class="time">
-                                เวลาเริ่มเช็คชื่อ : <span class="TimeClock">{{ $qrcode->start_time }}</span> น.
-                            </p>
-                            <p class="time">
-                                เวลาสาย : <span class="TimeClock">{{ $qrcode->late_time }}</span> น.
-                            </p>
+                                    <p>{!! QrCode::size(220)->generate(url('/student/qrcode/checking/' . $qrcode->id)) !!}</p>
+
+
+                                    <div class="modal" id="qr-code-modal" style="display: none;">
+                                        <div class="modal-content">
+                                            <span class="close-modal" onclick="closeQrCodeModal()">&times;</span>
+                                            <div class="text-center">
+
+                                                <div class="qr-code-container">
+                                                    {!! QrCode::size(350)->generate(url('/student/qrcode/checking/' . $qrcode->id)) !!}
+                                                </div>
+                                                <h3 class="card-title pt-5">สแกน QRcode เพื่อเช็คชื่อเข้าเรียน วิชา :
+                                                    {{ $qrcode->qrcode_subject->subject_name }}</h3>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="py-2">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                            onclick="openQrCodeModal()">แสดง QR code</button>
+                                    </div>
+
+                                    <p class="time">เวลาปัจจุบัน: <span id="realTimeClock"></span> น.</p>
+
+                                    <p class="time">
+                                        เวลาเริ่มเช็คชื่อ : <span class="TimeClock">{{ $qrcode->start_time }}</span> น.
+                                    </p>
+                                    <p class="time">
+                                        เวลาสาย : <span class="TimeClock">{{ $qrcode->late_time }}</span> น.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="col-md-7">
                             <div class="row">
                                 <div class="col-sm-8">
@@ -162,6 +240,17 @@
 @endsection
 
 @section('scripts')
+    <script>
+        function openQrCodeModal() {
+            var modal = document.getElementById("qr-code-modal");
+            modal.style.display = "block";
+        }
+
+        function closeQrCodeModal() {
+            var modal = document.getElementById("qr-code-modal");
+            modal.style.display = "none";
+        }
+    </script>
     <script>
         function updateClock() {
             var now = new Date();

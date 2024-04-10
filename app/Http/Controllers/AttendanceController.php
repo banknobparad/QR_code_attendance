@@ -73,7 +73,7 @@ class AttendanceController extends Controller
 
     public function showQRcode()
     {
-        $qrcodes = Qrcode::with('qrcode_checks.student', 'qrcode_subject')->where('teacher_id', Auth::id())->where('status', '=', 'active')->get();
+        $qrcodes = Qrcode::with('qrcode_checks.student', 'qrcode_subject', 'user')->where('teacher_id', Auth::id())->where('status', '=', 'active')->get();
         // dd($qrcodes->toArray());
         return view('teacher.attendance.show', compact('qrcodes'));
     }
@@ -162,12 +162,12 @@ class AttendanceController extends Controller
 
         // ตรวจสอบว่ามีข้อมูลของ Qrcode และผู้ใช้ที่เข้าสู่ระบบหรือไม่
         if (!$qrcode || !$user) {
-            return response()->json(['message' => 'ไม่พบข้อมูล'], 404);
+            return redirect()->back()->with('warning', 'ไม่สามารถสแกน QR code ได้เนื่องจากไม่พบข้อมูล QR code');
         }
 
         // ตรวจสอบว่าผู้ใช้ที่เข้าสู่ระบบเป็นนักศึกษาหรือไม่
         if ($user->role != 'Student') {
-            return response()->json(['message' => 'คุณไม่มีสิทธิ์เข้าถึง'], 403);
+            return redirect()->back()->with('question', 'ไม่สามารถสแกน QR code ได้เนื่องจากคุณไม่ได้เป็นนักศึกษา');
         }
 
         // ตรวจสอบว่ามีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบหรือไม่
@@ -175,13 +175,17 @@ class AttendanceController extends Controller
 
         // dd($user);
 
-        // ถ้ามีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบ
         if ($qrcodeCheck) {
             // ตรวจสอบเวลา
             $currentTime = Carbon::now();
             $lateTime = Carbon::parse($qrcode->late_time);
+            $endTime = Carbon::parse($qrcode->end_time);
 
-            // ตรวจสอบว่าสแกน QR code ก่อนหรือหลังเวลา late_time
+            // ตรวจสอบว่าสแกน QR code ก่อนหรือหลังเวลา end_time
+            if ($currentTime->gt($endTime)) {
+                return redirect()->back()->with('error', 'ไม่สามารถเช็คชื่อได้ เนื่องจากเวลาสแกน QR code เกินเวลาที่กำหนด');
+            }
+
             $status = ($currentTime->lte($lateTime)) ? 'มา' : 'มาสาย';
 
             // ทำการอัปเดตข้อมูลเฉพาะฟิลด์ status ใน table qrcode_checks
@@ -189,10 +193,23 @@ class AttendanceController extends Controller
                 'status' => $status,
             ]);
 
-            return response()->json(['message' => 'อัปเดตข้อมูลเรียบร้อย'], 200);
+            $normalCount = Qrcode_check::where('status', 'มา')->count();
+            $lateCount = Qrcode_check::where('status', 'มาสาย')->count();
+            $absentCount = Qrcode_check::whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count();
+
+            $data = [
+                'normalCount' => $normalCount,
+                'lateCount' => $lateCount,
+                'absentCount' => $absentCount,
+            ];
+
+            event(new App\Events\AttendanceUpdated($data));
+
+            return redirect()->back()->with('success', 'อัปเดตข้อมูลเรียบร้อย');
+
         }
 
         // ถ้าไม่มีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบ
-        return response()->json(['message' => 'ไม่พบข้อมูลในระบบ'], 404);
+        return redirect()->back()->with('error', 'ไม่พบข้อมูลในระบบ');
     }
 }

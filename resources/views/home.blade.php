@@ -49,8 +49,32 @@
         border: none;
         background: transparent;
     }
+
+
+    #reader {
+        margin: 0 auto;
+    }
+
+    .menu {
+        text-align: center;
+    }
+
+    .menu a {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .menu a:hover {
+        background-color: #0056b3;
+    }
 </style>
-<style>
+{{-- <style>
     #realTimeClock {
         font-size: 24px;
         color: #333;
@@ -59,11 +83,10 @@
         border-radius: 5px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-</style>
+</style> --}}
 
 
 @section('content')
-
     <div class="container">
         @if (Auth::user()->role == 'Administrator')
             <div class="row justify-content-center">
@@ -210,24 +233,36 @@
             </div>
         @endif
         @if (Auth::user()->role == 'Student')
-            <div>
-                hello student
+            @foreach ($users as $item)
+                <div
+                    style="padding: 20px; margin: 20px auto; max-width: 700px; border-radius: 8px; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <h2
+                        style="text-align: center; font-size: 24px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                        สวัสดี {{ $item->name }}</h2>
+
+                    <div style="width: 100%; margin: 0 auto; overflow: hidden;">
+                        <div id="reader"></div>
+                    </div>
+
+                    <p
+                        style="margin-top: 20px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                        เวลาปัจจุบัน: <span id="realTimeClock" style="font-weight: bold;"></span></p>
+
+                    <div class="menu">
+                        <a href="/history">ดูประวัติการเช็คชื่อ</a>
+                        <a href="/profile">ดูประวัติส่วนตัว</a>
+                    </div>
+                </div>
 
 
-                <div style="width: 100%" id="reader"></div>
                 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
                 <script>
                     function onScanSuccess(decodedText, decodedResult) {
-                        // handle the scanned code as you like, for example:
-
                         window.location.href = decodedText;
-
                         console.log(`Code matched = ${decodedText}`, decodedResult);
                     }
 
                     function onScanFailure(error) {
-                        // handle scan failure, usually better to ignore and keep scanning.
-                        // for example:
                         console.warn(`Code scan error = ${error}`);
                     }
 
@@ -239,78 +274,61 @@
                                 height: 250
                             }
                         },
-                        /* verbose= */
                         false);
                     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
                 </script>
-
-            </div>
-            <p class="text-center">เวลาปัจจุบัน: <span id="realTimeClock"></span></p>
-
-            <h3 class="mt-3">ประวัติเช็คชื่อวันนี้</h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">วิชา</th>
-                        <th scope="col">แผนก</th>
-                        <th scope="col">สถานะ</th>
-
-                        <th scope="col">เวลาเช็คชื่อ</th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- @foreach ($checkings as $index => $checking)
-                        @php
-                            $index++;
-                        @endphp
-                        <tr>
-                            <th scope="row">{{ $index }}</th>
-
-
-                            <td>{{ $checking->subject->subject_name }}</td>
-                            <td>{{ $checking->branch->name }}</td>
-                            <td>
-                                @if ($checking->status == 'present')
-                                    <span class="badge badge-success  text-bg-success">ตรงเวลา</span>
-                                @elseif($checking->status == 'late')
-                                    <span class="badge badge-danger text-bg-danger">สาย</span>
-                                @else
-                                    <span class="badge badge-secondary">สถานะไม่ทราบ</span>
-                                @endif
-                            </td>
-
-                            <td>{{ $checking->created_at }}</td>
-
-
-                        </tr>
-                    @endforeach --}}
-
-                </tbody>
-            </table>
+            @endforeach
         @endif
 
-    </div>
 
 
 
     </div>
 
+
+
+    </div>
 @endsection
 
 
 @section('scripts')
-    @if (session()->has('success'))
+    @if (Session::has('success'))
         <script>
-            toastr.success('{{ session()->get('success') }}');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '{{ Session::get('success') }}',
+            });
         </script>
     @endif
 
-    @if (session()->has('error'))
+    @if (Session::has('error'))
         <script>
-            toastr.error('{{ session()->get('error') }}');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ Session::get('error') }}',
+            });
+        </script>
+    @endif
+
+    @if (Session::has('warning'))
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: '{{ Session::get('warning') }}',
+            });
+        </script>
+    @endif
+
+    @if (Session::has('question'))
+        <script>
+            Swal.fire({
+                icon: 'question',
+                title: 'Question',
+                text: '{{ Session::get('question') }}',
+            });
         </script>
     @endif
 

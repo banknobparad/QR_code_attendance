@@ -23,11 +23,15 @@ class Qrcode extends Model
         return $this->hasMany('App\Models\Subject_stu', 'subject_id', 'subject_id');
     }
 
-    public function broadcastAttendanceUpdated()
-    {
-        event(new AttendanceUpdatedEvent($this->id));
-    }
+    // public function broadcastAttendanceUpdated()
+    // {
+    //     event(new AttendanceUpdatedEvent($this->id));
+    // }
 
+    function user()
+    {
+        return $this->hasMany('App\Models\user', 'id', 'teacher_id');
+    }
 
 
     // public function isExpired(): bool
