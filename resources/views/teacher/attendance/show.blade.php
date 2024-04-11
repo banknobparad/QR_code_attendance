@@ -287,42 +287,42 @@
         });
     </script>
 
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-<script>
-    var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-        cluster: '{{ env('PUSHER_APP_CLUSTER') }}', // Optional if set in .env
-        encrypted: true
-    });
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            cluster: '{{ env('PUSHER_APP_CLUSTER') }}', // Optional if set in .env
+            encrypted: true
+        });
 
-    var channel = pusher.subscribe('attendance-updates');
+        var channel = pusher.subscribe('attendance-updates');
 
-    channel.bind('App\\Events\\AttendanceUpdated', function(data) {
-        // Update the status in the dropdown based on the ID
-        var statusId = data.data.status.id;
-        var statusValue = data.data.status.status;
+        channel.bind('App\\Events\\AttendanceUpdated', function(data) {
+            // Update the status in the dropdown based on the ID
+            var statusId = data.data.status.id;
+            var statusValue = data.data.status.status;
 
-        var dropdown = document.querySelector('select[data-id="' + statusId + '"]');
-        if (dropdown) {
-            // Set the selected option based on the received status value
-            var options = dropdown.options;
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].value === statusValue) {
-                    options[i].selected = true;
-                    // Get the background color of the selected option
-                    var selectedColor = $(dropdown).find('option:selected').css('background-color');
-                    $(dropdown).css('background-color', selectedColor);
-                    $(dropdown).css('color', '#ffffff'); // Set the text color to white
-                    break;
+            var dropdown = document.querySelector('select[data-id="' + statusId + '"]');
+            if (dropdown) {
+                // Set the selected option based on the received status value
+                var options = dropdown.options;
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].value === statusValue) {
+                        options[i].selected = true;
+                        // Get the background color of the selected option
+                        var selectedColor = $(dropdown).find('option:selected').css('background-color');
+                        $(dropdown).css('background-color', selectedColor);
+                        $(dropdown).css('color', '#ffffff'); // Set the text color to white
+                        break;
+                    }
                 }
             }
-        }
 
-        // Update the attendance counts
-        document.getElementById('normalAttendanceCount').innerText = 'จำนวน: ' + data.data.normal + ' คน';
-        document.getElementById('lateAttendanceCount').innerText = 'จำนวน: ' + data.data.late + ' คน';
-        document.getElementById('absentAttendanceCount').innerText = 'จำนวน: ' + data.data.absent + ' คน';
-    });
-</script>
+            // Update the attendance counts
+            document.getElementById('normalAttendanceCount').innerText = 'จำนวน: ' + data.data.normal + ' คน';
+            document.getElementById('lateAttendanceCount').innerText = 'จำนวน: ' + data.data.late + ' คน';
+            document.getElementById('absentAttendanceCount').innerText = 'จำนวน: ' + data.data.absent + ' คน';
+        });
+    </script>
 
 
 
@@ -361,18 +361,88 @@
 
         requestAnimationFrame(updateClock);
     </script>
+
+
     <script>
+        $(document).ready(function() {
+            $('#qrcodeChecksTable').DataTable({
+                responsive: true,
+                "language": {
+                    "sProcessing": "กำลังดำเนินการ...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sEmptyTable": "ไม่มีข้อมูลในตาราง",
+                    "sInfo": "",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกหมวดหมู่)",
+                    "sInfoPostFix": "",
+                    "sSearch": "ค้นหา:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        // "sFirst": "เริ่มต้น",
+                        // "sPrevious": "ก่อนหน้า",
+                        // "sNext": "ถัดไป",
+                        // "sLast": "สุดท้าย"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": เปิดใช้งานเพื่อเรียงลำดับคอลัมน์จากน้อยไปมาก",
+                        "sSortDescending": ": เปิดใช้งานเพื่อเรียงลำดับคอลัมน์จากมากไปน้อย"
+                    }
+                },
+                columnDefs: [{
+                    targets: [0],
+                    visible: false
+                }],
+            });
+
+            // เพิ่มการตรวจจับเหตุการณ์ change โดยตรงในตาราง
+            $('#qrcodeChecksTable').on('change', '.status-select', function() {
+                var status = $(this).val();
+                var id = $(this).data('id');
+                var token = "{{ csrf_token() }}";
+
+                $.ajax({
+                    url: '/teacher/attendance/update-status',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        status: status,
+                        student_id: $(this).data('student-id'),
+                        student_name: $(this).data('student-name'),
+                        _token: token
+                    },
+                    success: function(response) {
+                        $('#normalAttendanceCount').html('จำนวน: ' + response.normalCount +
+                            ' คน');
+                        $('#lateAttendanceCount').html('จำนวน: ' + response.lateCount + ' คน');
+                        $('#absentAttendanceCount').html('จำนวน: ' + response.absentCount +
+                            ' คน');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'เปลี่ยนสถานะสำเร็จ!',
+                            html: `${response.student_name} รหัส ${response.student_id} : ${response.status}`
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+
+    {{-- <script>
         $(document).ready(function() {
             $('#qrcodeChecksTable').DataTable({
                 responsive: true,
                 columnDefs: [{
                     targets: [0],
                     visible: false
-                }]
+                }],
             });
         });
-    </script>
-    <script>
+    </script> --}}
+
+    {{-- <script>
         $(document).ready(function() {
             $('.status-select').change(function() {
                 var status = $(this).val();
@@ -405,25 +475,6 @@
                     }
                 });
             });
-        });
-    </script>
-
-    {{-- <script>
-        // เชื่อมต่อกับ Pusher โดยใช้ข้อมูลจาก .env
-        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-            cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
-            encrypted: true
-        });
-
-        // สมัครสมาชิกสำหรับช่อง 'attendance-updates'
-        var channel = pusher.subscribe('attendance-updates');
-
-        // กำหนดการปรับปรุงข้อมูลเมื่อมีข้อมูลใหม่ถูกส่งมา
-        channel.bind('App\\Events\\AttendanceUpdated', function(data) {
-            // อัพเดทข้อมูลใน div ตามที่คุณต้องการ
-            document.getElementById('normalAttendanceCount').innerText = 'จำนวน: ' + data.normal + ' คน';
-            document.getElementById('lateAttendanceCount').innerText = 'จำนวน: ' + data.late + ' คน';
-            document.getElementById('absentAttendanceCount').innerText = 'จำนวน: ' + data.absent + ' คน';
         });
     </script> --}}
 
