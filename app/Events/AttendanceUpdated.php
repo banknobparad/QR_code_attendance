@@ -14,25 +14,15 @@ class AttendanceUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $attendanceCounts;
+    public $data;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct($attendanceCounts)
+    public function __construct($data)
     {
-        $this->attendanceCounts = $attendanceCounts;
+        $this->data = $data;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
-        return new Channel('attendance-updates');
+        return new Channel('attendance-updates'); // Replace with your desired channel name if different
     }
 }

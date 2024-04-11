@@ -80,6 +80,28 @@
             border-radius: 10px;
 
         }
+
+
+        /* CSS for custom colors */
+        .come {
+            background-color: #198754;
+        }
+
+        .late {
+            background-color: #e2ab04;
+        }
+
+        .absent {
+            background-color: #dc3545;
+        }
+
+        .personalleave {
+            background-color: #6c757d;
+        }
+
+        .sickleave {
+            background-color: #17a2b8;
+        }
     </style>
 
     @foreach ($qrcodes as $index => $qrcode)
@@ -175,6 +197,10 @@
                                     </div>
                                 </div>
 
+                                {{-- <h3 id="normalAttendanceCount"></h3>
+                                <h3 id="lateAttendanceCount"></h3>
+                                <h3 id="absentAttendanceCount"></h3> --}}
+
                                 <div class="col-sm-12">
                                     <table id="qrcodeChecksTable" class="table table-bordered py-1">
                                         <thead>
@@ -194,26 +220,29 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $item->student_id }}</td>
                                                     <td>{{ $item->student->name }}</td>
+
+
                                                     <td>
                                                         <select name="status" class="form-select status-select"
                                                             data-id="{{ $item->id }}"
                                                             data-student-id="{{ $item->student_id }}"
                                                             data-student-name="{{ $item->student->name }}">
-                                                            <option value="มา"
+                                                            <option value="มา" class="come" id="come"
                                                                 {{ $item->status == 'มา' ? 'selected' : '' }}>มา</option>
-                                                            <option value="มาสาย"
+                                                            <option value="มาสาย" class="late" id="late"
                                                                 {{ $item->status == 'มาสาย' ? 'selected' : '' }}>มาสาย
                                                             </option>
-                                                            <option value="ขาด"
+                                                            <option value="ขาด" class="absent" id="absent"
                                                                 {{ $item->status == 'ขาด' ? 'selected' : '' }}>ขาด</option>
-                                                            <option value="ลากิจ"
+                                                            <option value="ลากิจ" class="personalleave" id="personalleave"
                                                                 {{ $item->status == 'ลากิจ' ? 'selected' : '' }}>ลากิจ
                                                             </option>
-                                                            <option value="ลาป่วย"
+                                                            <option value="ลาป่วย" class="sickleave" id="sickleave"
                                                                 {{ $item->status == 'ลาป่วย' ? 'selected' : '' }}>ลาป่วย
                                                             </option>
                                                         </select>
                                                     </td>
+
 
                                                 </tr>
                                             @endforeach
@@ -240,6 +269,64 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $(document).ready(function() {
+            // เมื่อเริ่มต้นให้ใช้สีของ option ที่ถูกเลือกเป็นสีพื้นหลังของ dropdown
+            $('.status-select').each(function() {
+                var selectedColor = $(this).find('option:selected').css('background-color');
+                $(this).css('background-color', selectedColor);
+                $(this).css('color', '#ffffff'); // เพิ่มบรรทัดนี้เพื่อให้ข้อความใน dropdown เป็นสีขาว
+            });
+
+            // เมื่อมีการเลือกตัวเลือกใน dropdown
+            $('.status-select').change(function() {
+                var selectedColor = $(this).find('option:selected').css('background-color');
+                $(this).css('background-color', selectedColor);
+                $(this).css('color', '#ffffff'); // เพิ่มบรรทัดนี้เพื่อให้ข้อความใน dropdown เป็นสีขาว
+            });
+        });
+    </script>
+
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+    var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+        cluster: '{{ env('PUSHER_APP_CLUSTER') }}', // Optional if set in .env
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('attendance-updates');
+
+    channel.bind('App\\Events\\AttendanceUpdated', function(data) {
+        // Update the status in the dropdown based on the ID
+        var statusId = data.data.status.id;
+        var statusValue = data.data.status.status;
+
+        var dropdown = document.querySelector('select[data-id="' + statusId + '"]');
+        if (dropdown) {
+            // Set the selected option based on the received status value
+            var options = dropdown.options;
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === statusValue) {
+                    options[i].selected = true;
+                    // Get the background color of the selected option
+                    var selectedColor = $(dropdown).find('option:selected').css('background-color');
+                    $(dropdown).css('background-color', selectedColor);
+                    $(dropdown).css('color', '#ffffff'); // Set the text color to white
+                    break;
+                }
+            }
+        }
+
+        // Update the attendance counts
+        document.getElementById('normalAttendanceCount').innerText = 'จำนวน: ' + data.data.normal + ' คน';
+        document.getElementById('lateAttendanceCount').innerText = 'จำนวน: ' + data.data.late + ' คน';
+        document.getElementById('absentAttendanceCount').innerText = 'จำนวน: ' + data.data.absent + ' คน';
+    });
+</script>
+
+
+
+
     <script>
         function openQrCodeModal() {
             var modal = document.getElementById("qr-code-modal");
@@ -321,8 +408,7 @@
         });
     </script>
 
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <script>
+    {{-- <script>
         // เชื่อมต่อกับ Pusher โดยใช้ข้อมูลจาก .env
         var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
             cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
@@ -339,6 +425,6 @@
             document.getElementById('lateAttendanceCount').innerText = 'จำนวน: ' + data.late + ' คน';
             document.getElementById('absentAttendanceCount').innerText = 'จำนวน: ' + data.absent + ' คน';
         });
-    </script>
+    </script> --}}
 
 @endsection

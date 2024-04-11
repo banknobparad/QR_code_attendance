@@ -12,6 +12,7 @@ use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Scheduler;
 use Maatwebsite\Excel\Concerns\ToArray;
 // use Illuminate\Support\Facades\Scheduler;
@@ -140,20 +141,6 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function updateAttendance()
-    {
-        // Update attendance counts
-        $normalCount = Qrcode_check::where('status', 'มา')->count();
-        $lateCount = Qrcode_check::where('status', 'มาสาย')->count();
-        $absentCount = Qrcode_check::whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count();
-
-        // Broadcast updated counts
-        broadcast(new AttendanceUpdated([
-            'normal' => $normalCount,
-            'late' => $lateCount,
-            'absent' => $absentCount,
-        ]));
-    }
 
     public function checkQrCode($qrcode_id)
     {
@@ -193,20 +180,34 @@ class AttendanceController extends Controller
                 'status' => $status,
             ]);
 
+            // Update attendance counts
             $normalCount = Qrcode_check::where('status', 'มา')->count();
             $lateCount = Qrcode_check::where('status', 'มาสาย')->count();
             $absentCount = Qrcode_check::whereIn('status', ['ขาด', 'ลากิจ', 'ลาป่วย'])->count();
 
-            $data = [
-                'normalCount' => $normalCount,
-                'lateCount' => $lateCount,
-                'absentCount' => $absentCount,
-            ];
+            // Broadcast updated counts
+            broadcast(new AttendanceUpdated([
+                'normal' => $normalCount,
+                'late' => $lateCount,
+                'absent' => $absentCount,
+                'status' => [
+                    'id' => $qrcodeCheck->id, // เพิ่ม ID ของ status
+                    'status' => $status,
+                ],
+            ]));
 
-            event(new App\Events\AttendanceUpdated($data));
+            Log::info('Broadcasted AttendanceUpdated event: ' . json_encode([
+                'normal' => $normalCount,
+                'late' => $lateCount,
+                'absent' => $absentCount,
+                'status' => [
+                    'id' => $qrcodeCheck->id, // เพิ่ม ID ของ status
+                    'status' => $status,
+                ],
+            ], JSON_UNESCAPED_UNICODE));
+
 
             return redirect()->back()->with('success', 'อัปเดตข้อมูลเรียบร้อย');
-
         }
 
         // ถ้าไม่มีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบ
