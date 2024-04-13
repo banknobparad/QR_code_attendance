@@ -10,6 +10,8 @@ class Qrcode_check extends Model
     use HasFactory;
     protected $fillable = [
         'status',
+        'check',
+        'update_at'
     ];
     function student()
     {

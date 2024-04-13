@@ -123,7 +123,7 @@
         let late_time = new Date();
 
         // เพิ่มเวลา 5 นาที
-        late_time.setMinutes(late_time.getMinutes() + 1);
+        late_time.setMinutes(late_time.getMinutes() + 30);
 
         // ใช้วัตถุ Date ที่มีเวลาเพิ่มไป 5 นาทีเป็นค่าเริ่มต้น
         flatpickr('#late_time', {
@@ -138,7 +138,7 @@
         let end_time = new Date();
 
         // เพิ่มเวลา 5 นาที
-        end_time.setMinutes(end_time.getMinutes() + 2);
+        end_time.setMinutes(end_time.getMinutes() + 120);
 
         // ใช้วัตถุ Date ที่มีเวลาเพิ่มไป 5 นาทีเป็นค่าเริ่มต้น
         flatpickr('#end_time', {

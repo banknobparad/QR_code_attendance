@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('subject_id')->nullable();
             $table->string('student_id')->nullable();
             $table->enum('status', ['มา', 'มาสาย', 'ขาด', 'ลากิจ', 'ลาป่วย'])->default('ขาด');
+
+            $table->boolean('check')->default(0)->null();
+
             $table->timestamps();
         });
     }

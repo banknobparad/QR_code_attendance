@@ -15,4 +15,6 @@ class Subject_stu extends Model
         'student_id',
         'name',
     ];
+
+
 }

@@ -254,11 +254,29 @@
                         </div>
                     </div>
                 </div>
+                <style>
+                    .card-footer {
+                        display: flex;
+                        justify-content: flex-end;
+                        /* จัดให้เนื้อหาอยู่ทางขวาสุด */
+                        align-items: center;
+                        /* จัดให้ปุ่มอยู่กึ่งกลางตามแนวตั้ง */
+                    }
+
+                    .card-footer .btn {
+                        margin-left: auto;
+                        /* ย้ายปุ่มไปอยู่ทางขวาสุด */
+                    }
+                </style>
                 <div class="card-footer">
                     <small class="text-muted">
-                        <div class="btn btn-sm btn-info">
-                            sdf
-                        </div>
+                        <form action="{{ route('attendance.saveAttendance') }}" method="POST">
+                            <!-- ตั้งค่า URL ที่จะทำการบันทึกข้อมูล -->
+                            @csrf <!-- ใส่ CSRF token -->
+                            <input type="hidden" name="qrcode_id" value="{{ $qrcode->id }}">
+                            <!-- รับค่า ID ของแต่ละรายการ -->
+                            <button type="submit" class="btn btn-info">บันทึก</button> <!-- ปุ่มบันทึก -->
+                        </form>
                     </small>
                 </div>
             </div>

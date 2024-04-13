@@ -38,6 +38,7 @@ class ComposerStaticInit3f62d896ff16ec2694fe0ddfbeed5388
         'c72349b1fe8d0deeedd3a52e8aa814d8' => __DIR__ . '/..' . '/mockery/mockery/library/helpers.php',
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
+        'e80562809c7194acfc550c34a01dda6b' => __DIR__ . '/..' . '/phattarachai/thaidate/src/function.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '320163ac6b93aebe3dc25b60a0533d56' => __DIR__ . '/..' . '/spatie/laravel-ignition/src/helpers.php',
     );
@@ -117,6 +118,7 @@ class ComposerStaticInit3f62d896ff16ec2694fe0ddfbeed5388
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
+            'Phattarachai\\Thaidate\\' => 22,
         ),
         'N' => 
         array (
@@ -414,6 +416,10 @@ class ComposerStaticInit3f62d896ff16ec2694fe0ddfbeed5388
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
+        'Phattarachai\\Thaidate\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phattarachai/thaidate/src',
+        ),
         'NunoMaduro\\Collision\\' => 
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
@@ -606,6 +612,7 @@ class ComposerStaticInit3f62d896ff16ec2694fe0ddfbeed5388
     public static $classMap = array (
         'App\\Console\\Commands\\QRExpireCommand' => __DIR__ . '/../..' . '/app/Console/Commands/QRExpireCommand.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
+        'App\\Events\\AttendanceUpdated' => __DIR__ . '/../..' . '/app/Events/AttendanceUpdated.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\AttendanceController' => __DIR__ . '/../..' . '/app/Http/Controllers/AttendanceController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
@@ -616,6 +623,7 @@ class ComposerStaticInit3f62d896ff16ec2694fe0ddfbeed5388
         'App\\Http\\Controllers\\Auth\\VerificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerificationController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
+        'App\\Http\\Controllers\\ReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/ReportController.php',
         'App\\Http\\Controllers\\SubjectController' => __DIR__ . '/../..' . '/app/Http/Controllers/SubjectController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Admin' => __DIR__ . '/../..' . '/app/Http/Middleware/Admin.php',
@@ -5092,6 +5100,8 @@ class ComposerStaticInit3f62d896ff16ec2694fe0ddfbeed5388
         'PharIo\\Version\\VersionConstraintParser' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintParser.php',
         'PharIo\\Version\\VersionConstraintValue' => __DIR__ . '/..' . '/phar-io/version/src/VersionConstraintValue.php',
         'PharIo\\Version\\VersionNumber' => __DIR__ . '/..' . '/phar-io/version/src/VersionNumber.php',
+        'Phattarachai\\Thaidate\\Thaidate' => __DIR__ . '/..' . '/phattarachai/thaidate/src/Thaidate.php',
+        'Phattarachai\\Thaidate\\ThaidateServiceProvider' => __DIR__ . '/..' . '/phattarachai/thaidate/src/ThaidateServiceProvider.php',
         'PhpOffice\\PhpSpreadsheet\\Calculation\\ArrayEnabled' => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Calculation/ArrayEnabled.php',
         'PhpOffice\\PhpSpreadsheet\\Calculation\\BinaryComparison' => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Calculation/BinaryComparison.php',
         'PhpOffice\\PhpSpreadsheet\\Calculation\\Calculation' => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Calculation/Calculation.php',

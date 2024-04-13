@@ -64,6 +64,8 @@ class AttendanceController extends Controller
             $qrcodeCheck->teacher_id = $user->id;
             $qrcodeCheck->student_id = $subjectStu->student_id;
 
+            $qrcodeCheck->updated_at = null;
+
             $qrcodeCheck->save();
         }
 
@@ -157,12 +159,17 @@ class AttendanceController extends Controller
             return redirect()->back()->with('question', 'ไม่สามารถสแกน QR code ได้เนื่องจากคุณไม่ได้เป็นนักศึกษา');
         }
 
+
         // ตรวจสอบว่ามีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบหรือไม่
         $qrcodeCheck = Qrcode_check::where('student_id', $user->student_id)->first();
 
         // dd($user);
 
         if ($qrcodeCheck) {
+            // ตรวจสอบค่าในฟิลด์ check
+            if ($qrcodeCheck->check == 1) {
+                return redirect()->back()->with('question', 'ไม่สามารถสแกน QR code ได้เนื่องจากคุณได้ทำการเช็คชื่อไปแล้ว');
+            }
             // ตรวจสอบเวลา
             $currentTime = Carbon::now();
             $lateTime = Carbon::parse($qrcode->late_time);
@@ -178,6 +185,8 @@ class AttendanceController extends Controller
             // ทำการอัปเดตข้อมูลเฉพาะฟิลด์ status ใน table qrcode_checks
             $qrcodeCheck->update([
                 'status' => $status,
+                'check' => 1,
+                'updated_at' => $currentTime
             ]);
 
             // Update attendance counts
@@ -196,15 +205,15 @@ class AttendanceController extends Controller
                 ],
             ]));
 
-            Log::info('Broadcasted AttendanceUpdated event: ' . json_encode([
-                'normal' => $normalCount,
-                'late' => $lateCount,
-                'absent' => $absentCount,
-                'status' => [
-                    'id' => $qrcodeCheck->id, // เพิ่ม ID ของ status
-                    'status' => $status,
-                ],
-            ], JSON_UNESCAPED_UNICODE));
+            // Log::info('Broadcasted AttendanceUpdated event: ' . json_encode([
+            //     'normal' => $normalCount,
+            //     'late' => $lateCount,
+            //     'absent' => $absentCount,
+            //     'status' => [
+            //         'id' => $qrcodeCheck->id, // เพิ่ม ID ของ status
+            //         'status' => $status,
+            //     ],
+            // ], JSON_UNESCAPED_UNICODE));
 
 
             return redirect()->back()->with('success', 'อัปเดตข้อมูลเรียบร้อย');
@@ -212,5 +221,49 @@ class AttendanceController extends Controller
 
         // ถ้าไม่มีข้อมูลใน qrcode_checks ของนักศึกษาที่เข้าสู่ระบบ
         return redirect()->back()->with('error', 'ไม่พบข้อมูลในระบบ');
+    }
+
+    public function saveAttendance(Request $request)
+    {
+        $qrcodeId = $request->input('qrcode_id');
+        $qrcode = QRCode::find($qrcodeId);
+
+        if (!$qrcode) {
+            // ไม่พบ QR code ที่มี ID ตรงกับที่รับเข้ามา
+            // สามารถจัดการตามความเหมาะสม เช่น ส่งข้อความผิดพลาดกลับหรือทำอื่นๆ
+            return response()->json(['error' => 'QR code not found'], 404);
+        }
+
+        // นำข้อมูลจาก QR code ที่มี ID เดียวกันไปเก็บที่ table qrcode_alls
+        // นำข้อมูลจาก QR code ที่มี ID เดียวกันไปเก็บที่ table qrcode_alls
+        foreach ($qrcode->qrcode_checks as $check) {
+            // สร้างข้อมูลใหม่ในตาราง qrcode_alls โดยกำหนดค่าจากข้อมูลในตาราง qrcode_checks
+            $qrcode_all = new Qrcode_all();
+
+            // กำหนดค่าของแต่ละฟิลด์ในตาราง qrcode_alls เท่ากับค่าในตาราง qrcode_checks
+            $qrcode_all->qrcode_id = $check->qrcode_id;
+            $qrcode_all->teacher_id = $check->teacher_id;
+            $qrcode_all->subject_id = $check->subject_id;
+            $qrcode_all->student_id = $check->student_id;
+            $qrcode_all->status = $check->status;
+            $qrcode_all->check = $check->check;
+            $qrcode_all->created_at = $check->created_at;
+            $qrcode_all->updated_at = $check->updated_at;
+
+            // บันทึกข้อมูลในตาราง qrcode_alls
+            $qrcode_all->save();
+
+            // ลบข้อมูลที่มี ID เดียวกันที่ table qrcode_checks
+            $check->delete();
+        }
+
+
+
+        // ทำการอัพเดทสถานะของ QR code เป็น 'expired'
+        $qrcode->status = 'expired';
+        $qrcode->save();
+
+        // สามารถส่งคืนข้อความหรือสถานะการทำงานอื่นๆ กลับไปยัง client ตามความเหมาะสม
+        return redirect()->back()->with('success', 'อัปเดตข้อมูลเรียบร้อย');
     }
 }

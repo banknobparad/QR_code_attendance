@@ -1,3 +1,4 @@
+php artisan migrate:refresh --path=/database/migrations/2024_03_13_163712_create_subjects_table.php
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -16,6 +17,8 @@ return new class extends Migration
             $table->bigInteger('teacher_id')->nullable();
             $table->string('subject_id')->unique()->nullable();
             $table->string('subject_name')->nullable();
+            $table->string('branch_id')->nullable();
+            $table->string('year_id')->nullable();
             $table->timestamps();
         });
     }

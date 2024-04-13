@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '628146268449b186b8a5a352c8d0f844a899e5a9',
+        'reference' => 'b8a9301bbcdc89fbd843dfd6a513660b548cdb75',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -418,7 +418,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '628146268449b186b8a5a352c8d0f844a899e5a9',
+            'reference' => 'b8a9301bbcdc89fbd843dfd6a513660b548cdb75',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -690,6 +690,15 @@
             'install_path' => __DIR__ . '/../phar-io/version',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'phattarachai/thaidate' => array(
+            'pretty_version' => '12.1',
+            'version' => '12.1.0.0',
+            'reference' => '4a759081179f3401a5dd47a39db923aee51c301c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phattarachai/thaidate',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'phpoffice/phpspreadsheet' => array(
             'pretty_version' => '1.29.0',

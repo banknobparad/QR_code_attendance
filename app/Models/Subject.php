@@ -11,7 +11,23 @@ class Subject extends Model
 
     protected $guarded = [];
 
-    function subject_stu(){
-        return $this->hasMany( 'App\Models\Subject_stu', 'subject_id', 'subject_id' );//id คือฟิลของตารางที่จะโยงไป , คีย์ที่จะโยงไป
+    function subject_stu()
+    {
+        return $this->hasMany('App\Models\Subject_stu', 'subject_id', 'subject_id'); //id คือฟิลของตารางที่จะโยงไป , คีย์ที่จะโยงไป
+    }
+
+    function qrcode_att()
+    {
+        return $this->hasMany('App\Models\Qrcode', 'subject_id', 'subject_id'); //id คือฟิลของตารางที่จะโยงไป , คีย์ที่จะโยงไป
+    }
+
+    function branch()
+    {
+        return $this->hasOne('App\Models\Branch', 'id', 'branch_id');
+    }
+
+    function year()
+    {
+        return $this->hasOne('App\Models\Year', 'id', 'year_id');
     }
 }

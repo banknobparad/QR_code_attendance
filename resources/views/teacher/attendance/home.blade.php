@@ -75,6 +75,7 @@
             transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
         }
     </style>
+
     <div class="container d-flex flex-column">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4 mb-4">

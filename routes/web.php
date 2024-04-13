@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Attendance;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -73,5 +74,26 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
 
 
         Route::post('/update-status', [AttendanceController::class, 'updateStatus'])->name('attendance.updateStatus');
+
+        Route::post('/save-attendance', [AttendanceController::class, 'saveAttendance'])->name('attendance.saveAttendance');
+    });
+    Route::group(['prefix' => 'report'], function () {
+
+
+        Route::get('homereport', [ReportController::class, 'index'])->name('report.home');
+        Route::get('report/detail/{id}', [ReportController::class, 'detail'])->name('report.detail');
+
+        Route::get('/export/excel/{id}', [ReportController::class, 'exportToExcel'])->name('export.excel');
+
+        // Route::get('index', [AttendanceController::class, 'index'])->name('attendance.index');
+        // Route::get('showQRcode', [AttendanceController::class, 'showQRcode'])->name('attendance.showQRcode');
+
+        // Route::post('qrcode/created', [AttendanceController::class, 'store'])->name('attendance.qrcode.store');
+
+
+
+        // Route::post('/update-status', [AttendanceController::class, 'updateStatus'])->name('attendance.updateStatus');
+
+        // Route::post('/save-attendance', [AttendanceController::class, 'saveAttendance'])->name('attendance.saveAttendance');
     });
 });

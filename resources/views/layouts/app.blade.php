@@ -20,6 +20,7 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- Bootstrap CSS -->
@@ -29,6 +30,18 @@
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan&family=Bai+Jamjuree:wght@400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Anuphan', sans-serif !important;
+            /* font-family: 'Bai Jamjuree', sans-serif !important; */
+
+        }
+    </style>
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -88,6 +101,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeAttendance')"
                                         href="{{ route('attendance.home') }}">{{ __('Attendance') }}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  @yield('activeReport')"
+                                        href="{{ route('report.home') }}">{{ __('Report') }}</a>
                                 </li>
                             @endif
 

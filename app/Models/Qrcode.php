@@ -14,6 +14,11 @@ class Qrcode extends Model
     {
         return $this->hasMany('App\Models\Qrcode_check', 'qrcode_id', 'id');
     }
+    function qrcode_all()
+    {
+        return $this->hasMany('App\Models\Qrcode_all', 'qrcode_id', 'id');
+    }
+
     function qrcode_subject()
     {
         return $this->belongsTo('App\Models\Subject', 'subject_id', 'subject_id');

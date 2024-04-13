@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentImport;
+use App\Models\Branch;
 use App\Models\Subject_stu;
 use App\Models\User;
+use App\Models\Year;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,8 +57,10 @@ class SubjectController extends Controller
     public function create()
     {
         $data = Stu_list::where('teacher_id', Auth::id())->get();
+        $branch = Branch::all();
+        $year = Year::all();
 
-        return view('teacher.subjects.create', compact('data'));
+        return view('teacher.subjects.create', compact('data','branch','year'));
     }
 
 
@@ -113,6 +117,8 @@ class SubjectController extends Controller
             'teacher_id' => auth()->user()->id,
             'subject_id' => $request->subject_id,
             'subject_name' =>  $request->subject_name,
+            'branch_id' => $request->branch_id,
+            'year_id' => $request->year_id
         ];
 
         $students = Stu_list::where('teacher_id', Auth::id())->get();
