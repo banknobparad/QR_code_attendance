@@ -82,8 +82,13 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
 
         Route::get('homereport', [ReportController::class, 'index'])->name('report.home');
         Route::get('report/detail/{id}', [ReportController::class, 'detail'])->name('report.detail');
-
         Route::get('/export/excel/{id}', [ReportController::class, 'exportToExcel'])->name('export.excel');
+
+
+
+        Route::get('report/detail/all/{id}', [ReportController::class, 'detailAll'])->name('report.detail.all');
+        Route::get('/export/excel/all/{id}', [ReportController::class, 'exportToExcelAll'])->name('export.excel.all');
+
 
         // Route::get('index', [AttendanceController::class, 'index'])->name('attendance.index');
         // Route::get('showQRcode', [AttendanceController::class, 'showQRcode'])->name('attendance.showQRcode');

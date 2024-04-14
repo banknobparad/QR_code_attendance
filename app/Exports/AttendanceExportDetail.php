@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class AttendanceExport implements FromCollection, WithHeadings, WithMapping, WithEvents
+class AttendanceExportDetail implements FromCollection, WithHeadings, WithMapping, WithEvents
 {
     protected $id;
 
@@ -50,31 +50,31 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping, Wit
                 $teacher_name = $this->collection()->first()['user'][0]['name'];
 
                 // A1:H1
-                $event->sheet->mergeCells('A1:H1');
+                $event->sheet->mergeCells('A1:D1');
                 $event->sheet->setCellValue('A1', 'รายงานผลการเช็คชื่อ ' . 'วัน' . $date . ' ' . '(เวลา' . '.' . ' ' . '' . $time . ' ' . 'น)');
 
                 // A2:H2
-                $event->sheet->mergeCells('A2:H2');
+                $event->sheet->mergeCells('A2:D2');
                 $event->sheet->setCellValue('A2', 'วิชา ' . $subject_name . '  ' . '' . 'รหัสวิชา' . ' ' . '' . $subject_id);
 
                 // A3:H3
-                $event->sheet->mergeCells('A3:H3');
+                $event->sheet->mergeCells('A3:D3');
                 $event->sheet->setCellValue('A3', '' . $branch  . '' . ' ' . ' ' . $year . ' ');
 
                 // A4:H4
-                $event->sheet->mergeCells('A4:H4');
+                $event->sheet->mergeCells('A4:D4');
                 $event->sheet->setCellValue('A4', 'อาจารย์ผู้สอน' . ' ' . $teacher_name);
 
-                $event->sheet->getStyle('A1:H100')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getStyle('A1:D100')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-                $event->sheet->getStyle('A1:H100')->applyFromArray([
+                $event->sheet->getStyle('A1:D100')->applyFromArray([
                     'font' => [
                         'name' => 'TH Sarabun new',
                         'size' => 14
                     ]
                 ]);
 
-                foreach (range('A', 'H') as $columnID) {
+                foreach (range('A', 'D') as $columnID) {
                     $event->sheet->getColumnDimension($columnID)->setAutoSize(true);
                 }
             },
@@ -96,15 +96,18 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping, Wit
     public function map($row): array
     {
         $qrcodeData = $row['qrcode_all'];
-
         $mappedData = [];
 
         foreach ($qrcodeData as $data) {
+            $updatedAt = $data['updated_at'];
+            $updatedAtDisplay = ($updatedAt === null) ? '-' :
+                "วัน " . thaidate('l j F Y', $updatedAt) . " " . thaidate('H:i', $updatedAt) . " น.";
+
             $mappedData[] = [
                 $data['student_id'],
                 $data['student_substu']['name'],
                 $data['status'],
-                $data['updated_at'],
+                $updatedAtDisplay
             ];
         }
 

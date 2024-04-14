@@ -6,6 +6,16 @@
             padding: 6px 27px;
             /* Adjust padding as needed */
         }
+
+        .btn.btn-detail {
+            padding: 6px 23px;
+            /* Adjust padding as needed */
+        }
+
+        .btn.btn-all {
+            padding: 6px 9px;
+            /* Adjust padding as needed */
+        }
     </style>
 
     </style>
@@ -40,11 +50,22 @@
                                 </tr>
                             </thead>
                             @foreach ($subjects as $subject)
+
+                            {{-- @php
+                                dd($subjects->toArray());
+                            @endphp --}}
                                 <thead style="background-color: #ecececd1">
-                                    <th scope="col" colspan="3"
+                                    <th scope="col" colspan="5"
                                         style="text-align: left; font-size:17px; color:#242424">วิชา :
                                         {{ $subject->subject_name }} รหัสวิชา {{ $subject->subject_id }} </th>
-                                    <th scope="col" colspan="3" style="text-align: left;"></th>
+<th scope="col" style="text-align: center;">
+    <form action="{{ route('report.detail.all', ['id' => $subject->id]) }}">
+        <button class="btn btn-all" style="background-color: #e2ab04;"><i
+                class="fa-regular fa-file-lines"></i>
+            รายงานเช็คชื่อรวม
+        </button>
+    </form>
+</th>
 
                                 </thead>
                                 <tbody>
@@ -61,16 +82,19 @@
                                                 <div style="display: flex; justify-content: center; align-items: center;">
                                                     <div class="text-center">
                                                         @if ($qrcode_att->status === 'expired')
-                                                            <button class="btn btn-danger"><i class="fa-solid fa-x"></i> ปิดการเช็คชื่อแล้ว</button>
+                                                            <button class="btn btn-danger"><i class="fa-solid fa-x"></i>
+                                                                ปิดการเช็คชื่อแล้ว</button>
                                                         @elseif($qrcode_att->status === 'active')
-                                                            <button class="btn btn-success"><i class="fa-solid fa-check"></i> กำลังเช็คชื่อ</button>
+                                                            <button class="btn btn-success"><i
+                                                                    class="fa-solid fa-check"></i> กำลังเช็คชื่อ</button>
                                                         @else
                                                             <button class="btn btn-sm btn-secondary">สถานะไม่ระบุ</button>
                                                         @endif
                                                     </div>
                                                     <div style="padding-left: 10px;">
                                                         <form action="">
-                                                            <button class="btn btn-sm btn-success"><i class="fa-solid fa-check"></i> รายละเอียด</button>
+                                                            <button class="btn btn-sm btn-success"><i
+                                                                    class="fa-solid fa-check"></i> รายละเอียด</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -78,8 +102,8 @@
 
                                             <td style="text-align: center;">
                                                 <form action="{{ route('report.detail', ['id' => $qrcode_att->id]) }}">
-                                                    <button class="btn btn-secondary"><i
-                                                            class="fa-regular fa-file-lines"></i> รายงานการเช็คชื่อ
+                                                    <button class="btn btn-secondary btn-detail"><i
+                                                            class="fa-regular fa-file-lines"></i> รายงานเช็คชื่อ
                                                     </button>
                                                 </form>
                                             </td>
