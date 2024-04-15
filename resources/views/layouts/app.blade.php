@@ -28,8 +28,10 @@
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
+    {{-- pusher --}}
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
+    {{-- google font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan&family=Bai+Jamjuree:wght@400&display=swap"
@@ -52,7 +54,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ route('home') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    QR Cheack
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -86,6 +88,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeAdministrator')"
                                         href="{{-- {{ route('users.index') }} --}}">{{ __('Administrator') }}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  @yield('activeUsers')"
+                                        href="{{ route('users.index') }}">{{ __('Users') }}</a>
                                 </li>
                             @endif
 

@@ -3,23 +3,33 @@
 @section('content')
     <style>
         .btn.btn-come {
-            padding: 5px 24px;
+            padding: 5px 17px;
+            font-size: 12px;
         }
 
         .btn.btn-personalleave {
-            padding: 5px 15px;
+            padding: 5px 12px;
+            font-size: 12px;
         }
 
         .btn.btn-info {
-            padding: 5px 18px;
+            padding: 5px 12px;
+            font-size: 12px;
         }
 
         .btn.btn-sickleave {
-            padding: 5px 16px;
+            padding: 5px 7px;
+            font-size: 13px;
         }
 
-        .btn.btn-sickleave {
-            padding: 5px 20px;
+        .btn.btn-absent {
+            padding: 5px 14px;
+        }
+
+
+        .btn.btn-late {
+            padding: 5px 5px;
+            font-size: 13px;
         }
 
         .custom-box {
@@ -34,13 +44,18 @@
         }
     </style>
 
+
     <div class="container">
         <div class="row justify-content-center col-md-12">
 
             <div class="card border-0 shadow-sm">
                 <div class="card-header border-0 mb-2 fs-2 lead" style="color: #282829">
                     <div class="d-flex justify-content-between">
-                        <span>{{ __('ประวัติการเช็คชื่อวิชา :') }} {{-- {{ $qrcode->qrcode_subject->subject_name }} --}}</span>
+
+                        <span>{{ __('ประวัติการเช็คชื่อวิชา :') }} {{ $subject_stu[0]['subject_name'] }}
+                            {{ __('รหัสวิชา :') }} {{ $subject_stu[0]['subject_id'] }}</span>
+
+
 
                         <div class="button-create text-end">
                             <a class="btn btn-primary rounded-1 shadow-none ms-auto" href="{{-- {{ route('attendance.index') }} --}}"
@@ -51,37 +66,27 @@
 
                     </div>
                 </div>
-                <div class="card-body border-0 mb-2 fs-2">
+                <div class="card-body border-0 mb-1 fs-2">
                     <div class="row row-cols-auto">
-                        {{-- <div style="font-size: 18px;" class="col border no-rounded-border m-1">นักศึกษาทั้งหมด : <span
+                        <div style="font-size: 18px;" class="col border no-rounded-border m-1">นักศึกษาทั้งหมด : <span
                                 class="btn btn-sm btn-info" style="font-weight: bold; color:#ffffff">
-                                {{ $qrcode_alls->count() }}</span> คน
+                                @foreach ($subject_stu as $item)
+                                    {{-- @php
+
+                            dd($item->toArray());
+                        @endphp --}}
+                                    {{ $item->subject_stu->count() }}
+                            </span> คน
+                            @endforeach
                         </div>
-                        <div>
-                            <span style="color: #545454"> |</span>
-                        </div>
-                        <div style="font-size: 18px;" class="col border no-rounded-border m-1">เข้าเรียนปกติ : <span
-                                class="btn btn-sm" style="font-weight: bold; background-color: #198754; color:#ffffff">
-                                {{ $qrcode_alls->where('status', 'มา')->count() }}</span> คน
-                        </div>
-                        <div style="font-size: 18px;" class="col border no-rounded-border m-1">เข้าเรียนสาย : <span
-                                class="btn btn-sm" style="font-weight: bold; background-color: #e2ab04; color:#ffffff">
-                                {{ $qrcode_alls->where('status', 'มาสาย')->count() }}</span> คน
-                        </div>
-                     toArray());div style="font-size: 18px;" class="col border no-rounded-border m-1">ลากิจ/ลาป่วย : <span
-                                class="btn btn-sm btn-secondary" style="font-weight: bold;">
-                                {{ $qrcode_alls->whereIn('status', ['ลากิจ', 'ลาป่วย'])->count() }}</span> คน
-                        </div>
-                        <div style="font-size: 18px;" class="col border no-rounded-border m-1">ขาดเรียน : <span
-                                class="btn btn-sm btn-danger" style="font-weight: bold;">
-                                {{ $qrcode_alls->where('status', 'ขาด')->count() }}</span> คน
-                        </div> --}}
+
                     </div>
 
                 </div>
 
                 <div class="button-create text-end">
-                    <a class="btn btn-warning" href="{{-- {{ route('export.excel', ['id' => $qrcode->id]) }} --}}" role="button">
+                    <a class="btn btn-warning" href="{{ route('export.excel.all', ['id' => $subject->id]) }}"
+                        role="button">
                         <i class="fa-regular fa-file-excel"></i> {{ __('Export to Excel') }}
                     </a>
                 </div>
@@ -90,9 +95,9 @@
 
 
                 <div class="col-md-12">
-                    <div class="card my-4">
+                    <div class="card my-3">
 
-                        <table id="detailTable" class="table">
+                        <table id="detailTable" class="table table-striped" style="width:100%">
                             <thead style="background-color: #ececec">
                                 <tr>
                                     <th scope="col" colspan="2" style="text-align: center;">ข้อมูลนักศึกษา</th>
@@ -104,10 +109,14 @@
                                 <tr>
                                     <th width="130px" scope="col" style="text-align: left;">รหัสนักศึกษา</th>
                                     <th scope="col" style="text-align: left;">ชื่อ</th>
-                                    <th width="110px" scope="col" style="text-align: center; font-size:13px;">เข้าเรียนปกติ</th>
-                                    <th width="110px" scope="col" style="text-align: center; font-size:13px;">เข้าเรียนสาย</th>
-                                    <th width="110px" scope="col" style="text-align: center; font-size:13px;">ลากิจ/ลาป่วย</th>
-                                    <th width="110px" scope="col" style="text-align: center; font-size:13px;">ขาดเรียน</th>
+                                    <th width="100px" scope="col" style="text-align: center; font-size:13px;">
+                                        เข้าเรียนปกติ</th>
+                                    <th width="100px" scope="col" style="text-align: center; font-size:13px;">
+                                        เข้าเรียนสาย</th>
+                                    <th width="100px" scope="col" style="text-align: center; font-size:13px;">
+                                        ลากิจ/ลาป่วย</th>
+                                    <th width="100px" scope="col" style="text-align: center; font-size:13px;">ขาดเรียน
+                                    </th>
                                     @foreach ($qrcodes as $item)
                                         <th scope="col" style="text-align: center;">
                                             ครั้งที่ {{ $loop->iteration }}<br>
@@ -120,7 +129,8 @@
                                 @foreach ($individualStatusCounts as $studentId => $statusCounts)
                                     <tr>
                                         <td style="text-align: left;">{{ $studentId }}</td>
-                                        <td style="text-align: left;">{{ $individualStatusCounts[$studentId]['name'] }}</td>
+                                        <td style="text-align: left;">{{ $individualStatusCounts[$studentId]['name'] }}
+                                        </td>
                                         <td style="text-align: center;">{{ $statusCounts['มา'] ?? 0 }} ครั้ง</td>
                                         <td style="text-align: center;">{{ $statusCounts['มาสาย'] ?? 0 }} ครั้ง</td>
                                         <td style="text-align: center;">
@@ -130,11 +140,40 @@
                                             <td style="text-align: center;">
                                                 @foreach ($item->qrcode_all as $qrcode)
                                                     @if ($qrcode->student_id == $studentId)
-                                                        {{ $qrcode->status }}
+                                                        @if ($qrcode->status === 'มา')
+                                                            <button class="btn btn-sm btn-come"
+                                                                style="font-weight: bold; background-color: #198754; color:#ffffff">
+                                                                มา
+                                                            </button>
+                                                        @elseif($qrcode->status === 'มาสาย')
+                                                            <button class="btn btn-sm btn-late"
+                                                                style="font-weight: bold; background-color: #e2ab04; color:#ffffff">
+                                                                มาสาย
+                                                            </button>
+                                                        @elseif($qrcode->status === 'ลากิจ')
+                                                            <button class="btn btn-sm btn-personalleave"
+                                                                style="font-weight: bold; background-color: #6c757d; color:#ffffff">
+                                                                ลากิจ
+                                                            </button>
+                                                        @elseif($qrcode->status === 'ลาป่วย')
+                                                            <button class="btn btn-sm btn-sickleave"
+                                                                style="font-weight: bold; background-color: #17a2b8; color:#ffffff">
+                                                                ลาป่วย
+                                                            </button>
+                                                        @elseif($qrcode->status === 'ขาด')
+                                                            <button class="btn btn-sm btn-absent"
+                                                                style="font-weight: bold; background-color: #dc3545; color:#ffffff">
+                                                                ขาด
+                                                            </button>
+                                                        @else
+                                                            <!-- สถานะอื่นๆ ที่คุณต้องการจะจัดการ -->
+                                                            <button class="btn btn-info">Error</button>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </td>
                                         @endforeach
+
                                     </tr>
                                 @endforeach
 
@@ -155,11 +194,37 @@
 
 @endsection
 @section('scripts')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.0/css/buttons.dataTables.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"></script>
+
+
+
     <script>
         $(document).ready(function() {
             $('#detailTable').DataTable({
+                layout: {
+                    topStart: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    }
+                },
                 responsive: true,
                 paging: false,
+                "ordering": false,
+
                 "language": {
                     "sProcessing": "กำลังดำเนินการ...",
                     "sLengthMenu": "แสดง _MENU_ รายการ",
@@ -184,15 +249,6 @@
                 },
 
             });
-        });
-
-        $('#reportTable').on('click', '.detail-btn', function() {
-            // จัดการรายละเอียด
-        });
-
-        // เพิ่มการจัดการเมื่อคลิกที่ปุ่มรายงาน
-        $('#reportTable').on('click', '.report-btn', function() {
-            // จัดการรายงาน
         });
     </script>
 @endsection

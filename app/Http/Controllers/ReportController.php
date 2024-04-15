@@ -77,7 +77,7 @@ class ReportController extends Controller
         }
 
         // dd($individualStatusCounts);
-        // dd($qrcodes->toArray());
+        // dd($subject_stu->toArray());
 
         return view('teacher.reports.detail_all', compact('qrcodes', 'subject', 'subject_stu', 'individualStatusCounts'));
     }

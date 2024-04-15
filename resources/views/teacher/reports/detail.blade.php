@@ -18,7 +18,7 @@
             padding: 5px 16px;
         }
 
-        .btn.btn-sickleave {
+        .btn.btn-absent {
             padding: 5px 20px;
         }
 
@@ -120,16 +120,12 @@
                                                     <button class="btn btn-personalleave"
                                                         style="font-weight: bold; background-color: #6c757d; color:#ffffff">
                                                         ลากิจ </button>
-                                                @elseif($item->status === 'ลากิจ')
-                                                    <button class="btn btn-personalleave"
-                                                        style="font-weight: bold; background-color: #6c757d; color:#ffffff">
-                                                        ลากิจ </button>
                                                 @elseif($item->status === 'ลาป่วย')
                                                     <button class="btn btn-sickleave"
                                                         style="font-weight: bold; background-color: #17a2b8; color:#ffffff">
-                                                        ลากิจ </button>
+                                                        ลาป่วย </button>
                                                 @elseif($item->status === 'ขาด')
-                                                    <button class="btn btn-danger btn-sickleave">
+                                                    <button class="btn btn-danger btn-absent">
                                                         ขาด </button>
                                                 @else
                                                     <!-- สถานะอื่นๆ ที่คุณต้องการจะจัดการ -->

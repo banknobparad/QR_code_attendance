@@ -29,7 +29,7 @@
                     <div class="card-body">
                         <div class="col-md-12 table-responsive" id="subjectsTable">
                             <table class="table table-hover">
-                                <thead class="table-dark">
+                                <thead class="table-success">
                                     <tr>
                                         <th scope="row">#</th>
                                         <th scope="row">subject_id</th>

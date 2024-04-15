@@ -27,7 +27,7 @@
                         <span>{{ __('ประวัติการเช็คชื่อ') }}</span>
 
                         <div class="button-create text-end">
-                            <a class="btn btn-primary rounded-1 shadow-none ms-auto" href="{{-- {{ route('subject.create') }} --}}"
+                            <a class="btn btn-primary rounded-1 shadow-none ms-auto" href="{{ route('attendance.index') }}"
                                 role="button">
                                 <i class="fa-solid fa-plus"></i> {{ __('สร้าง QR code สำหรับเช็คชื่อ') }}
                             </a>
@@ -50,22 +50,21 @@
                                 </tr>
                             </thead>
                             @foreach ($subjects as $subject)
-
-                            {{-- @php
+                                {{-- @php
                                 dd($subjects->toArray());
                             @endphp --}}
                                 <thead style="background-color: #ecececd1">
                                     <th scope="col" colspan="5"
                                         style="text-align: left; font-size:17px; color:#242424">วิชา :
                                         {{ $subject->subject_name }} รหัสวิชา {{ $subject->subject_id }} </th>
-<th scope="col" style="text-align: center;">
-    <form action="{{ route('report.detail.all', ['id' => $subject->id]) }}">
-        <button class="btn btn-all" style="background-color: #e2ab04;"><i
-                class="fa-regular fa-file-lines"></i>
-            รายงานเช็คชื่อรวม
-        </button>
-    </form>
-</th>
+                                    <th scope="col" style="text-align: center;">
+                                        <form action="{{ route('report.detail.all', ['id' => $subject->id]) }}">
+                                            <button class="btn btn-all" style="background-color: #e2ab04;"><i
+                                                    class="fa-regular fa-file-lines"></i>
+                                                รายงานเช็คชื่อรวม
+                                            </button>
+                                        </form>
+                                    </th>
 
                                 </thead>
                                 <tbody>

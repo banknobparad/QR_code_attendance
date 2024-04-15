@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Attendance;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
@@ -27,9 +28,18 @@ Route::get('/pusher', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'home'])->name('home');
 
 Route::get('/student/qrcode/checking/{qrcode_id}', [AttendanceController::class, 'checkQrCode'])->name('checkQrCode');
+
+Route::get('index', [HomeController::class, 'index'])->name('users.index');
+
+Route::get('edit/{id}', [HomeController::class, 'edit'])->name('users.edit');
+Route::get('destroy/{id}', [HomeController::class, 'destroy'])->name('users.destroy');
+
+Route::post('store', [HomeController::class, 'store'])->name('users.store');
+Route::post('update', [HomeController::class, 'update'])->name('users.update');
+
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
     Route::group(['prefix' => 'subject'], function () {
