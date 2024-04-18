@@ -1,5 +1,11 @@
 @extends('layouts.app')
 @section('title')
+    QR code
+@endsection
+@section('activeAttendance')
+    active border-2 border-bottom border-primary
+@endsection
+
 @section('content')
     <style>
         #realTimeClock {
@@ -108,7 +114,7 @@
         <div class="container d-flex flex-column">
             <div class="card m-2">
                 <div class="card-header">
-                    <h3 class="card-title">สแกน QRcode เพื่อเช็คชื่อเข้าเรียน วิชา :
+                    <h3 class="card-title"><i class="fa-solid fa-qrcode"></i> สแกน QRcode เพื่อเช็คชื่อเข้าเรียน วิชา :
                         {{ $qrcode->qrcode_subject->subject_name }}</h3>
 
                 </div>
@@ -138,7 +144,8 @@
                                     </div>
                                     <div class="py-2">
                                         <button type="button" class="btn btn-sm btn-secondary"
-                                            onclick="openQrCodeModal()">แสดง QR code</button>
+                                            onclick="openQrCodeModal()">แสดง QR code <i
+                                                class="fa-regular fa-eye"></i></button>
                                     </div>
 
                                     <p class="time">เวลาปัจจุบัน: <span id="realTimeClock"></span> น.</p>

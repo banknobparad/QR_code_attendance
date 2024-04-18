@@ -1,5 +1,10 @@
 @extends('layouts.app')
-@section('title')
+@section('title', 'Report')
+
+@section('activeReport')
+    active border-2 border-bottom border-primary
+@endsection
+
 @section('content')
     <style>
         .btn.btn-success {
@@ -24,12 +29,12 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-header border-0 bg-transparent mb-2 fs-2 text-primary lead">
                     <div class="d-flex justify-content-between">
-                        <span>{{ __('ประวัติการเช็คชื่อ') }}</span>
+                        <span style=" color: #362cbc">{{ __('ประวัติการเช็คชื่อ') }} <i class="fa-solid fa-clock-rotate-left"></i></span>
 
                         <div class="button-create text-end">
-                            <a class="btn btn-primary rounded-1 shadow-none ms-auto" href="{{ route('attendance.index') }}"
+                            <a class="btn rounded-1 shadow-none ms-auto" style="background-color: #362cbc; color: #ffffff" href="{{ route('attendance.index') }}"
                                 role="button">
-                                <i class="fa-solid fa-plus"></i> {{ __('สร้าง QR code สำหรับเช็คชื่อ') }}
+                                <i  class="fa-solid fa-plus"></i> {{ __('สร้าง QR code สำหรับเช็คชื่อ') }}
                             </a>
                         </div>
 
@@ -126,14 +131,13 @@
             $('#reportTable').DataTable({
                 responsive: true,
                 paging: false,
-
                 "language": {
                     "sProcessing": "กำลังดำเนินการ...",
                     "sLengthMenu": "แสดง _MENU_ รายการ",
                     "sZeroRecords": "ไม่พบข้อมูล",
                     "sEmptyTable": "ไม่มีข้อมูลในตาราง",
                     "sInfo": "",
-                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoEmpty": "",
                     "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกหมวดหมู่)",
                     "sInfoPostFix": "",
                     "sSearch": "ค้นหา:",

@@ -60,7 +60,7 @@ class SubjectController extends Controller
         $branch = Branch::all();
         $year = Year::all();
 
-        return view('teacher.subjects.create', compact('data','branch','year'));
+        return view('teacher.subjects.create', compact('data', 'branch', 'year'));
     }
 
 
@@ -141,7 +141,7 @@ class SubjectController extends Controller
 
     public function show($subject_id)
     {
-        $subject = Subject::with('subject_stu')->where('subject_is', $subject_id);
+        $subject = Subject::with('subject_stu')->where('subject_is', $subject_id)->where('teacher_id', auth()->user()->id);
 
         if (!$subject) {
             return response()->json(['error' => 'Subject not found'], 404);

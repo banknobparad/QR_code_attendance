@@ -18,7 +18,12 @@ class ReportController extends Controller
     public function index()
     {
 
-        $subjects = Subject::with(['qrcode_att', 'branch', 'year',])->where('teacher_id', Auth::id())->get();
+        if (Auth::user()->role === 'Administrator') {
+            $subjects = Subject::with(['qrcode_att', 'branch', 'year',])->get();
+        } else {
+            $subjects = Subject::with(['qrcode_att', 'branch', 'year',])->where('teacher_id', Auth::id())->get();
+        }
+
 
         // dd($subjects->toArray());
         return view('teacher.reports.index', compact('subjects'));

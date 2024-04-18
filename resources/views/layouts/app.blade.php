@@ -8,7 +8,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Attendance Recording | @yield('title')</title>
+    <title>ClassQR Check | @yield('title')</title>
+    <link rel="icon" type="images/png" href="{{ asset('images/qr-code-name.svg') }}">
 
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.min.css" />
@@ -50,10 +51,14 @@
 </head>
 
 <body>
+
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ route('home') }}">
+                    <img src="{{ asset('images/qr-code-title.svg') }}" width="30" height="30"
+                        class="d-inline-block align-top" alt="">
+
                     QR Cheack
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -92,6 +97,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeUsers')"
                                         href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  @yield('activeReport')"
+                                        href="{{ route('report.home') }}">{{ __('Report') }}</a>
                                 </li>
                             @endif
 

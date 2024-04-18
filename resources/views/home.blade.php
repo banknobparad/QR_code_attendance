@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Home')
+
+
 <style>
     table#AdminTable {
         width: 100%;
@@ -310,7 +313,7 @@
                                     <div class="image-hover text-center">
                                         <img src="/images/qr-code.svg" alt="QR Code" class="qr-code">
                                     </div>
-                                    <button  class="btn btn-primary">ไปหน้าสร้าง QR code</button>
+                                    <button class="btn btn-primary">ไปหน้าสร้าง QR code</button>
 
                                 </div>
                             </div>
@@ -334,6 +337,76 @@
             </div>
         @endif
         @if (Auth::user()->role == 'Student')
+            <style>
+                .card {
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                }
+
+                .card-body {
+                    padding: 20px;
+                }
+
+                .card-title {
+                    font-weight: bold;
+                }
+
+                .card-text {
+                    color: #777;
+                }
+
+                .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    border-radius: 5px;
+                    transition: 0.3s;
+                }
+
+                .btn-primary:hover {
+                    background-color: #0069d9;
+                    border-color: #0069d9;
+                }
+
+                .btn-primary:active {
+                    transform: scale(1.1);
+                }
+
+                /* ตัวอย่าง animation เพิ่มเติม */
+
+                .btn-primary:hover {
+                    transform: translateY(5px);
+                }
+
+                .btn-primary:active {
+                    transform: scale(0.8);
+                }
+
+
+                .btn-primary:hover {
+                    animation: pulse 0.5s ease-in-out;
+                }
+
+                .qr-code {
+                    width: 100px;
+                    height: 100px;
+                    margin: 10px;
+                }
+
+                .image-hover:hover .qr-code {
+                    transform: scale(0.9);
+                    opacity: 0.8;
+                    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+                }
+
+                .image-hover .qr-code:hover {
+                    transform: scale(0.9);
+                    opacity: 0.8;
+                }
+
+                .image-hover .qr-code {
+                    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+                }
+            </style>
             @foreach ($users as $item)
                 <div
                     style="padding: 20px; margin: 20px auto; max-width: 700px; border-radius: 8px; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
@@ -374,6 +447,27 @@
                         false);
                     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
                 </script>
+
+                <div class="container d-flex flex-column">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 col-lg-3 mb-4">
+                            <a href="{{ route('history') }}">
+                                <div class="card h-100 card-hover">
+
+                                    <div class="card-body d-flex flex-column justify-content-between">
+                                        <h5 class="card-title">ดูประวัติการเช็คชื่อ</h5>
+                                        <div class="image-hover text-center">
+                                            <img src="/images/report.svg" alt="QR Code" class="qr-code">
+                                        </div>
+                                        <button class="btn btn-primary">ไปหน้าดูประวัติการเช็คชื่อ</button>
+
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
             @endforeach
         @endif
 
@@ -405,20 +499,20 @@
                 icon: 'error',
                 title: 'Error',
                 text: '{{ Session::get('error') }}',
-            }); <
-            />
-            @endif
-
-            @if (Session::has('warning'))
-                <
-                script >
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Warning',
-                        text: '{{ Session::get('warning') }}',
-                    });
+            });
         </script>
     @endif
+
+    @if (Session::has('warning'))
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: '{{ Session::get('warning') }}',
+            });
+        </script>
+    @endif
+
 
     @if (Session::has('question'))
         <script>
@@ -550,63 +644,6 @@
                     text: student_id.toString(), //student_id เป็น string
                     width: 128,
                     height: 128
-                });
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            fetch();
-
-            function isPresenCheckt(isPresent) {
-
-                if (isPresent == 1) {
-                    return `<span class="badge bg-success">Present</span>`;
-                } else {
-                    return `<span class="badge bg-danger">Absent</span>`;
-                }
-            }
-
-
-
-            function fetch() {
-                $.ajax({
-                    type: "GET",
-                    url: "/teacher/studentExam/getStudentExam",
-                    dataType: "json",
-                    success: function(response) {
-                        // console.log(response.student_exams);
-                        var count = 1;
-                        $('tbody').empty();
-                        $.each(response.student_exams, function(key, item) {
-                            $('tbody').append(
-                                '<tr class="align-middle"><td>' + count++ + '</td><td>' +
-                                item.studentName +
-                                '</td><td>' +
-                                item.name +
-                                '</td><td>' +
-                                item.nameHall +
-                                '</td><td>' +
-                                item.hours +
-                                '</td><td>' +
-                                item.day +
-                                '</td><td>' +
-                                item.start +
-                                '</td><td>' +
-                                item.end +
-                                '</td><td>' + isPresenCheckt(item.isPresent) +
-                                '</td></tr>'
-                            );
-
-                        });
-                    }
                 });
             }
         });

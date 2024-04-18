@@ -1,5 +1,9 @@
 @extends('layouts.app')
-@section('title')
+@section('title', 'Edit Subject')
+
+@section('activeSubject')
+    active border-2 border-bottom border-primary
+@endsection
 
 @section('content')
     <style>

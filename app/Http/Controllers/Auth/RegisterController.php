@@ -110,6 +110,7 @@ class RegisterController extends Controller
             'year_id' => $data['year_id'] ?? null,
             'phone_number' => $data['phone_number'] ?? null,
             'email_verified_at' => now(),
+            'remember_token' => '',
         ]);
     }
 

@@ -28,4 +28,10 @@ class Qrcode_all extends Model
     {
         return $this->belongsTo('App\Models\Subject_stu', 'student_id', 'student_id');
     }
+
+    // ในโมเดล Qrcode_all
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
+    }
 }

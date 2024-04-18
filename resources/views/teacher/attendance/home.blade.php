@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('title')
-    หน้าหลัก
+    Home
 @endsection
+
+
+@section('activeAttendance')
+    active border-2 border-bottom border-primary
+@endsection
+
 
 @section('content')
     <style>
@@ -82,11 +88,11 @@
                 <a href="{{ route('attendance.index') }}">
                     <div class="card h-100 card-hover">
                         <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title">หน้าสร้าง QR code</h5>
+                            <h5 class="card-title">หน้าสร้าง QR code <i class="fa-solid fa-plus" style="color: #362cbc;"></i></h5>
                             <div class="image-hover text-center">
                                 <img src="/images/qr-code.svg" alt="QR Code" class="qr-code">
                             </div>
-                            <button class="btn btn-primary">ไปหน้าสร้าง QR code</button>
+                            <button class="btn btn-primary">ไปหน้าสร้าง QR code <i class="fa-solid fa-caret-right" style="color: #ffffff;"></i></button>
 
                         </div>
                     </div>
@@ -98,10 +104,10 @@
                 <a href="{{ route('attendance.showQRcode') }}">
                     <div class="card h-100">
                         <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title">หน้าแสดง QR code</h5>
+                            <h5 class="card-title">หน้าแสดง QR code <i class="fa-regular fa-eye" style="color: #362cbc;"></i></h5>
                             <div class="image-hover text-center">
                                 <img src="/images/scan.svg" alt="QR Code" class="qr-code">
-                            </div> <button class="btn btn-primary">ไปหน้าแสดง QR code</button>
+                            </div> <button class="btn btn-primary">ไปหน้าแสดง QR code <i class="fa-solid fa-caret-right" style="color: #ffffff;"></i></button>
                         </div>
                     </div>
                 </a>

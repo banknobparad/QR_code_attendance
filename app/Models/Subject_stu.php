@@ -16,5 +16,13 @@ class Subject_stu extends Model
         'name',
     ];
 
+    function subject()
+    {
+        return $this->belongsTo('App\Models\Subject', 'subject_id', 'subject_id');
+    }
 
+    function qrcode_all()
+    {
+        return $this->hasMany('App\Models\Qrcode_all', 'subject_id', 'subject_id');
+    }
 }

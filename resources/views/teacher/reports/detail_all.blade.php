@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title')
+    Report All {{ $subject_stu[0]['subject_name'] }}
+@endsection
+@section('activeReport')
+    active border-2 border-bottom border-primary
+@endsection
 @section('content')
     <style>
         .btn.btn-come {
@@ -58,7 +63,7 @@
 
 
                         <div class="button-create text-end">
-                            <a class="btn btn-primary rounded-1 shadow-none ms-auto" href="{{-- {{ route('attendance.index') }} --}}"
+                            <a class="btn btn-primary rounded-1 shadow-none ms-auto" href="{{ route('attendance.index') }}"
                                 role="button">
                                 <i class="fa-solid fa-plus"></i> {{ __('สร้าง QR code สำหรับเช็คชื่อ') }}
                             </a>
@@ -84,12 +89,12 @@
 
                 </div>
 
-                <div class="button-create text-end">
+                {{-- <div class="button-create text-end">
                     <a class="btn btn-warning" href="{{ route('export.excel.all', ['id' => $subject->id]) }}"
                         role="button">
                         <i class="fa-regular fa-file-excel"></i> {{ __('Export to Excel') }}
                     </a>
-                </div>
+                </div> --}}
 
 
 
@@ -189,9 +194,6 @@
             </div>
         </div>
     </div>
-
-
-
 @endsection
 @section('scripts')
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css">

@@ -23,8 +23,8 @@
     </style>
     <div class="container d-flex flex-column">
         <div class="card shadow-sm rounded-3 my-auto col-md-11 mx-auto">
-            <div class="card-header p-3 h4" style="color: #0d6efd">
-                Add New Book
+            <div class="card-header p-3 h4" style="color: #362cbc">
+                สร้างการเช็คชื่อ <i class="fa-solid fa-square-plus"></i>
             </div>
             <div class="card-body p-4">
                 <form action="{{ route('attendance.qrcode.store') }}" method="POST" class="row">
@@ -101,7 +101,7 @@
 
 
                     <div class="form-group col-lg-12">
-                        <button type="submit" class="btn btn-dark float-end " for="form-group-input">Send</button>
+                        <button type="submit" style="background-color: #362cbc; color: #ffffff" class="btn btn float-end " for="form-group-input">Send</button>
                     </div>
                 </form>
             </div>

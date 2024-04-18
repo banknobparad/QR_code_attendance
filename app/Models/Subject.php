@@ -30,4 +30,9 @@ class Subject extends Model
     {
         return $this->hasOne('App\Models\Year', 'id', 'year_id');
     }
+
+    function user()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'teacher_id');
+    }
 }

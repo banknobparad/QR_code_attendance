@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('stu_lists', function (Blueprint $table) {
             $table->id();
             $table->string('teacher_id')->nullable();
-            $table->string('student_id', 10)->unique()->nullable();
+            $table->string('student_id', 10)->nullable();
             $table->string('name')->nullable();
             $table->timestamps();
         });

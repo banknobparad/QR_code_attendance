@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title')
+@section('title', 'Login')
 @section('content')
 
 
@@ -65,11 +65,7 @@
                                         {{ __('เข้าสู่ระบบ') }}
                                     </button>
 
-                                    @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                                            {{ __('ลืมรหัสผ่านหรือไม่?') }}
-                                        </a>
-                                    @endif
+                                   
                                 </div>
                             </div>
                         </form>

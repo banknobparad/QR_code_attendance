@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Register')
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -53,7 +55,7 @@
 
                                 <div class="col-md-6">
                                     <select name="branch_id"
-                                        class="form-select 
+                                        class="form-select
                                             {{ $errors->has('branch_id') ? 'is-invalid' : (old('branch_id') ? 'is-valid' : '') }}">
                                         <option value="" selected disabled>{{ __('เลือกสาขา') }}</option>
 
@@ -79,7 +81,7 @@
 
                                 <div class="col-md-6">
                                     <select name="year_id"
-                                        class="form-select 
+                                        class="form-select
                                             {{ $errors->has('year_id') ? 'is-invalid' : (old('year_id') ? 'is-valid' : '') }}">
                                         <option value="" selected disabled>{{ __('เลือกชั้นปี') }}</option>
                                         @foreach ($year as $item)

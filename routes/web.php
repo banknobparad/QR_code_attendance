@@ -5,6 +5,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,23 +24,30 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/pusher', function () {
     return view('pusher');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'home'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/student/qrcode/checking/{qrcode_id}', [AttendanceController::class, 'checkQrCode'])->name('checkQrCode');
+Route::get('/student/qrcode/checking/{qrcode_id}', [StudentController::class, 'checkQrCode'])->name('checkQrCode');
+Route::get('/student/history', [StudentController::class, 'history'])->name('history');
 
-Route::get('index', [HomeController::class, 'index'])->name('users.index');
+Route::get('/student/history/{id}', [StudentController::class, 'showHistory'])->name('showHistory');
 
-Route::get('edit/{id}', [HomeController::class, 'edit'])->name('users.edit');
-Route::get('destroy/{id}', [HomeController::class, 'destroy'])->name('users.destroy');
 
-Route::post('store', [HomeController::class, 'store'])->name('users.store');
-Route::post('update', [HomeController::class, 'update'])->name('users.update');
+
+
+Route::get('index', [AdminController::class, 'index'])->name('users.index');
+
+Route::get('edit/{id}', [AdminController::class, 'edit'])->name('users.edit');
+Route::get('destroy/{id}', [AdminController::class, 'destroy'])->name('users.destroy');
+
+Route::post('store', [AdminController::class, 'store'])->name('users.store');
+Route::post('update', [AdminController::class, 'update'])->name('users.update');
 
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
@@ -77,7 +86,7 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth']], function () {
 
         Route::get('home', [AttendanceController::class, 'home'])->name('attendance.home');
         Route::get('index', [AttendanceController::class, 'index'])->name('attendance.index');
-        Route::get('showQRcode', [AttendanceController::class, 'showQRcode'])->name('attendance.showQRcode');
+        Route::get('showQRcode', [AttendanceController::class, 'showQRcode'])->name('attendance.showQRcode')->middleware('teacher');
 
         Route::post('qrcode/created', [AttendanceController::class, 'store'])->name('attendance.qrcode.store');
 

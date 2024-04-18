@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('teacher_id')->nullable();
             $table->string('subject_id')->nullable();
-            $table->string('student_id', 10)->unique()->nullable();
+            $table->string('student_id', 10)->nullable();
             $table->string('name')->nullable();
             $table->timestamps();
         });

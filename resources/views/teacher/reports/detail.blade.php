@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title')
+   Report {{ $qrcode->qrcode_subject->subject_name }}
+@endsection
+@section('activeReport')
+    active border-2 border-bottom border-primary
+@endsection
 @section('content')
     <style>
         .btn.btn-come {
@@ -150,7 +155,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 @section('scripts')
     <script>
