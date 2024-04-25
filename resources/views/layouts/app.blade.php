@@ -41,7 +41,7 @@
     <style>
         body {
             font-family: 'Anuphan', sans-serif !important;
-            /* font-family: 'Bai Jamjuree', sans-serif !important; */
+            /*font-family: 'Bai Jamjuree', sans-serif !important;*/
 
         }
     </style>
@@ -91,8 +91,8 @@
                         @else
                             @if (Auth::user()->role == 'Administrator')
                                 <li class="nav-item">
-                                    <a class="nav-link  @yield('activeAdministrator')"
-                                        href="{{-- {{ route('users.index') }} --}}">{{ __('Administrator') }}</a>
+                                    <a class="nav-link  @yield('activeHome')"
+                                        href="{{ route('home') }}">{{ __('Home') }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeUsers')"
@@ -105,10 +105,6 @@
                             @endif
 
                             @if (Auth::user()->role == 'Teacher')
-                                <li class="nav-item">
-                                    <a class="nav-link  @yield('activeTeacher')"
-                                        href="{{-- {{ route('users.index') }} --}}">{{ __('Teacher') }}</a>
-                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeSubject')"
                                         href="{{ route('subject.index') }}">{{ __('Subject') }}</a>
@@ -126,7 +122,7 @@
                             @if (Auth::user()->role == 'Student')
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeStudent')"
-                                        href="{{-- {{ route('users.index') }} --}}">{{ __('Student') }}</a>
+                                        href="{{ route('history') }}">{{ __('ประวัติการเช็คชื่อ') }}</a>
                                 </li>
                             @endif
                             <li class="nav-item dropdown">

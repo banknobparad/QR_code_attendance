@@ -2,6 +2,9 @@
 
 @section('title', 'Home')
 
+@section('activeHome')
+    active border-2 border-bottom border-primary
+@endsection
 
 <style>
     table#AdminTable {
@@ -211,9 +214,10 @@
                                     <td hidden>{{ $user->updated_at }}</td>
                                     <td class="text-center actions-cell">
                                         <a href="{{ route('users.destroy', ['id' => $user->id]) }}"
-                                            class="btn btn-danger btn-sm shadow-none rounded-1">
+                                            class="btn btn-danger btn-sm shadow-none rounded-1 delete-btn">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
+
                                         <a href="{{ route('users.edit', ['id' => $user->id]) }}"
                                             class="btn btn-info btn-sm shadow-none rounded-1">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -329,6 +333,19 @@
                                     <div class="image-hover text-center">
                                         <img src="/images/scan.svg" alt="QR Code" class="qr-code">
                                     </div> <button class="btn btn-primary">ไปหน้าแสดง QR code</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <a href="{{ route('subject.index') }}">
+                            <div class="card h-100">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <h5 class="card-title">หน้าแสดงรายวิชา</h5>
+                                    <div class="image-hover text-center">
+                                        <img src="/images/book.svg" alt="QR Code" class="qr-code">
+                                    </div> <button class="btn btn-primary">ไปหน้าแสดงรายวิชา</button>
                                 </div>
                             </div>
                         </a>
@@ -589,6 +606,35 @@
         });
     </script> --}}
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // เพิ่ม event listener สำหรับปุ่มลบ
+        document.querySelectorAll('.delete-btn').forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                const url = this.getAttribute('href');
+
+                // แสดง SweetAlert2 สำหรับการยืนยันการลบ
+                Swal.fire({
+                    title: 'คุณแน่ใจหรือไม่?',
+                    text: "คุณต้องการลบผู้ใช้นี้หรือไม่?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'ใช่, ลบ!',
+                    cancelButtonText: 'ยกเลิก'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // ถ้ายืนยันการลบ ให้ทำการ redirect ไปยัง URL ที่กำหนด
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    </script>
+
 
     <script>
         $(document).ready(function() {
@@ -599,9 +645,28 @@
                 order: [
                     [6, 'desc']
                 ],
-                language: {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Thai.json"
-                }
+                "language": {
+                    "sProcessing": "กำลังดำเนินการ...",
+                    "sLengthMenu": "แสดง _MENU_ รายการ",
+                    "sZeroRecords": "ไม่พบข้อมูล",
+                    "sEmptyTable": "ไม่มีข้อมูลในตาราง",
+                    "sInfo": "",
+                    "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 รายการ",
+                    "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกหมวดหมู่)",
+                    "sInfoPostFix": "",
+                    "sSearch": "ค้นหา:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        // "sFirst": "เริ่มต้น",
+                        // "sPrevious": "ก่อนหน้า",
+                        // "sNext": "ถัดไป",
+                        // "sLast": "สุดท้าย"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": เปิดใช้งานเพื่อเรียงลำดับคอลัมน์จากน้อยไปมาก",
+                        "sSortDescending": ": เปิดใช้งานเพื่อเรียงลำดับคอลัมน์จากมากไปน้อย"
+                    }
+                },
             });
 
             $('#roleFilter').change(function() {

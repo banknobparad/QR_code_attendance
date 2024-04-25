@@ -69,7 +69,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::all()->find($id);
-        return view('admin.users.edit', compact('user'));
+        return view('admin.edit', compact('user'));
     }
 
     public function update(Request $request)
@@ -78,11 +78,9 @@ class AdminController extends Controller
         if ($user->email == $request->email) {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'password' => 'required|string|min:8|confirmed',
                 'role' => 'required|string',
             ]);
             $user->name = $request->name;
-            $user->password = Hash::make($request->password);
             $user->role = $request->role;
 
             $user->save();
@@ -91,12 +89,10 @@ class AdminController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|confirmed',
                 'role' => 'required|string',
             ]);
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);
             $user->role = $request->role;
 
             $user->save();
@@ -108,6 +104,6 @@ class AdminController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        return redirect('home')->with('success', 'Deleted user  successfully.');
+        return redirect('home');
     }
 }

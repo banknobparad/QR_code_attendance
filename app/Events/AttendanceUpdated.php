@@ -23,6 +23,6 @@ class AttendanceUpdated implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel('attendance-updates'); // Replace with your desired channel name if different
+        return new Channel('attendance-updates');
     }
 }

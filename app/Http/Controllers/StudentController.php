@@ -71,7 +71,7 @@ class StudentController extends Controller
                 'late' => $lateCount,
                 'absent' => $absentCount,
                 'status' => [
-                    'id' => $qrcodeCheck->id, // เพิ่ม ID ของ status
+                    'id' => $qrcodeCheck->id,
                     'status' => $status,
                 ],
             ]));

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2024 at 11:59 AM
+-- Generation Time: Apr 25, 2024 at 01:22 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `att_qrcode`
+-- Database: `att_qrcode_check`
 --
 
 -- --------------------------------------------------------
@@ -86,8 +86,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2024_03_13_163646_create_years_table', 1),
 (7, '2024_03_13_163702_create_branches_table', 1),
 (8, '2024_03_13_163712_create_subjects_table', 1),
-(11, '2024_03_14_110606_create_subject_stus_table', 2),
-(14, '2024_03_15_074158_create_stu_lists_table', 3);
+(9, '2024_03_14_110606_create_subject_stus_table', 1),
+(10, '2024_03_15_074158_create_stu_lists_table', 1),
+(11, '2024_04_04_080056_create_qrcodes_table', 1),
+(12, '2024_04_04_105344_create_qrcode_checks_table', 1),
+(13, '2024_04_04_150024_create_qrcode_alls_table', 1);
 
 -- --------------------------------------------------------
 
@@ -135,6 +138,76 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `qrcodes`
+--
+
+CREATE TABLE `qrcodes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `teacher_id` bigint(20) DEFAULT NULL,
+  `subject_id` varchar(255) DEFAULT NULL,
+  `start_time` time DEFAULT NULL,
+  `late_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `status` enum('active','expired') NOT NULL DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `qrcodes`
+--
+
+INSERT INTO `qrcodes` (`id`, `teacher_id`, `subject_id`, `start_time`, `late_time`, `end_time`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2, '123456', '18:17:00', '18:47:00', '20:17:00', 'expired', '2024-04-25 11:18:56', '2024-04-25 11:20:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `qrcode_alls`
+--
+
+CREATE TABLE `qrcode_alls` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `qrcode_id` varchar(255) DEFAULT NULL,
+  `teacher_id` bigint(20) DEFAULT NULL,
+  `subject_id` varchar(255) DEFAULT NULL,
+  `student_id` varchar(255) DEFAULT NULL,
+  `status` enum('มา','มาสาย','ขาด','ลากิจ','ลาป่วย') NOT NULL DEFAULT 'ขาด',
+  `check` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `qrcode_alls`
+--
+
+INSERT INTO `qrcode_alls` (`id`, `qrcode_id`, `teacher_id`, `subject_id`, `student_id`, `status`, `check`, `created_at`, `updated_at`) VALUES
+(1, '1', 2, '123456', '6314631017', 'มา', 1, '2024-04-25 11:18:56', '2024-04-25 11:19:35'),
+(2, '1', 2, '123456', '0120210120', 'มาสาย', 0, '2024-04-25 11:18:56', '2024-04-25 11:20:13'),
+(3, '1', 2, '123456', '6325632563', 'ขาด', 0, '2024-04-25 11:18:56', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `qrcode_checks`
+--
+
+CREATE TABLE `qrcode_checks` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `qrcode_id` varchar(255) DEFAULT NULL,
+  `teacher_id` bigint(20) DEFAULT NULL,
+  `subject_id` varchar(255) DEFAULT NULL,
+  `student_id` varchar(255) DEFAULT NULL,
+  `status` enum('มา','มาสาย','ขาด','ลากิจ','ลาป่วย') NOT NULL DEFAULT 'ขาด',
+  `check` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `stu_lists`
 --
 
@@ -147,14 +220,6 @@ CREATE TABLE `stu_lists` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `stu_lists`
---
-
-INSERT INTO `stu_lists` (`id`, `teacher_id`, `student_id`, `name`, `created_at`, `updated_at`) VALUES
-(28, '1', '6314631011', 'ภาวิณี ลีลาภรณ์', '2024-03-15 02:38:41', '2024-03-15 02:38:41'),
-(29, '1', '6314631012', 'อรรถพล ภักดีกุล', '2024-03-15 02:38:41', '2024-03-15 02:38:41');
-
 -- --------------------------------------------------------
 
 --
@@ -166,6 +231,8 @@ CREATE TABLE `subjects` (
   `teacher_id` bigint(20) DEFAULT NULL,
   `subject_id` varchar(255) DEFAULT NULL,
   `subject_name` varchar(255) DEFAULT NULL,
+  `branch_id` varchar(255) DEFAULT NULL,
+  `year_id` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -174,11 +241,8 @@ CREATE TABLE `subjects` (
 -- Dumping data for table `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `teacher_id`, `subject_id`, `subject_name`, `created_at`, `updated_at`) VALUES
-(16, 2, '123', 'asdf', '2024-03-15 02:51:50', '2024-03-15 02:51:50'),
-(17, 2, '23432', 'dsdfsd', '2024-03-15 02:52:21', '2024-03-15 02:52:21'),
-(18, 2, '2344', 'sdfs', '2024-03-15 02:53:58', '2024-03-15 02:53:58'),
-(19, 2, '2343222', 'sdfdf', '2024-03-15 02:54:47', '2024-03-15 02:54:47');
+INSERT INTO `subjects` (`id`, `teacher_id`, `subject_id`, `subject_name`, `branch_id`, `year_id`, `created_at`, `updated_at`) VALUES
+(1, 2, '123456', 'subject_test', '1', '2', '2024-04-25 11:17:08', '2024-04-25 11:17:08');
 
 -- --------------------------------------------------------
 
@@ -201,10 +265,9 @@ CREATE TABLE `subject_stus` (
 --
 
 INSERT INTO `subject_stus` (`id`, `teacher_id`, `subject_id`, `student_id`, `name`, `created_at`, `updated_at`) VALUES
-(59, 2, '2343222', '6314631010', 'กิตติพงษ์ บุญจันทร์', '2024-03-15 02:54:47', '2024-03-15 02:54:47'),
-(60, 2, '2343222', '6314631013', 'ภคินี ภักดีรักษ์', '2024-03-15 02:54:47', '2024-03-15 02:54:47'),
-(61, 2, '2343222', '6314631014', 'ณัฐวุฒิ ศิริโชค', '2024-03-15 02:54:47', '2024-03-15 02:54:47'),
-(62, 2, '2343222', '6314631015', 'ณัฐภัสสร จันทร์ประดับ', '2024-03-15 02:54:47', '2024-03-15 02:54:47');
+(1, 2, '123456', '6314631017', 'stusent test1', '2024-04-25 11:17:08', '2024-04-25 11:17:30'),
+(2, 2, '123456', '0120210120', 'student test2', '2024-04-25 11:17:08', '2024-04-25 11:17:08'),
+(3, 2, '123456', '6325632563', 'student test3', '2024-04-25 11:17:08', '2024-04-25 11:17:08');
 
 -- --------------------------------------------------------
 
@@ -233,22 +296,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `student_id`, `branch_id`, `year_id`, `phone_number`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrator', NULL, NULL, NULL, NULL, 'administrator@gmail.com', '2024-03-13 22:51:12', '$2y$10$iKZAOROjuGhMxJYUzBCBcuua/RkEuFh5Do/SrXL1GqPHkCmCcX7Gq', 'Administrator', NULL, '2024-03-13 22:51:12', '2024-03-13 22:51:12'),
-(2, 'Teacher', NULL, NULL, NULL, NULL, 'teacher@gmail.com', '2024-03-13 22:51:12', '$2y$10$UPBN/scB2ojJuQmBY5WZjOUqX/KcKbq2WtskmTCcEHD1Uj.u0rpqy', 'Teacher', NULL, '2024-03-13 22:51:12', '2024-03-13 22:51:12'),
-(3, 'test', '1234627890', '1', '1', '1233367890', 'user1@user.com', '2024-03-13 22:51:37', '$2y$10$B2VFVQapfEPZ7R7Xrn/rrORZiEY.LrvjWn9iW7BWJAHcVKC0kXUjq', 'Student', NULL, '2024-03-13 22:51:37', '2024-03-13 22:51:37'),
-(4, 'Autumn Towne', '8207188908', '4', '3', '4156741740', 'marilyne.purdy@example.com', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'H156TBxF7j', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(5, 'Ms. Terry', '2459709380', '3', '1', '6167835951', 'boyle.lonie@example.org', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'VUptNnjExX', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(6, 'Elvis Gutkowski', '1167305548', '3', '2', '6453358411', 'aida61@example.com', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', '3oxi4OmNlL', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(7, 'Dr. I', '4733203710', '1', '3', '4462712059', 'thompson.jerod@example.com', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'gPs6fzQyjv', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(8, 'Delta Wisozk', '8400086171', '3', '3', '5945651176', 'bode.dejon@example.net', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', '7Hlv6tzr7K', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(9, 'Miss Klocko', '1841624473', '2', '1', '1063796607', 'rath.rosamond@example.net', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'XdYyyyv5ed', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(10, 'Mr. DVM', '4845695475', '3', '3', '7576567955', 'angelita.gaylord@example.com', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'lEm1LLddQy', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(11, 'Carolina Buckridge', '6478501375', '1', '3', '9613694329', 'pfeest@example.net', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'knrI5cSz9Y', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(12, 'Jayne Kub', '5592332842', '4', '3', '5407677326', 'emiliano.von@example.com', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'zSlxGBoV9I', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(13, 'Antwan Jr.', '9575829439', '4', '4', '1607489497', 'ahudson@example.com', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'q110RoGaX3', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(14, 'Prof. Padberg', '2649624337', '2', '1', '2934495406', 'bnienow@example.org', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', '2NdL6fzjwi', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(15, 'Kara Williamson', '8887036200', '2', '2', '9463584705', 'ahmad.mante@example.org', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', 'XePZTzKXHd', '2024-03-15 03:42:37', '2024-03-15 03:42:37'),
-(16, 'Faustino Lockman', '7566747787', '1', '1', '8835049059', 'richmond.lemke@example.net', '2024-03-15 03:42:37', '$2y$10$rq.fkeipaXhro/Oza5uD/uiCeX18WccQ3HUETrgskgzmczaVDj7s6', 'Student', '4wvoko7KkG', '2024-03-15 03:42:37', '2024-03-15 03:42:37');
+(1, 'Administrator', NULL, NULL, NULL, NULL, 'administrator@gmail.com', '2024-04-25 11:10:26', '$2y$10$KZkz5EvARN4ceEzr/GkwhuGErburWvgxZvAkZwv3IeG86a1OegTtW', 'Administrator', NULL, '2024-04-25 11:10:26', '2024-04-25 11:10:26'),
+(2, 'Teacher', NULL, NULL, NULL, NULL, 'teacher@gmail.com', '2024-04-25 11:10:26', '$2y$10$KAAOw2br2xmjRwu45R2iwOtAQhY5QKyOAwXrpOGxRQPtp8gCIvfs.', 'Teacher', NULL, '2024-04-25 11:10:26', '2024-04-25 11:10:26'),
+(3, 'nobparad', '6314631017', '1', '1', '0815783083', 'user@user.com', '2024-04-25 11:18:30', '$2y$10$YCqBvzXV7MDTPf7Sp5jbDurpjGSFo6GQHI/GvaYHroNsBhMCJwD1a', 'Student', '', '2024-04-25 11:18:30', '2024-04-25 11:18:30');
 
 -- --------------------------------------------------------
 
@@ -319,11 +369,28 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indexes for table `qrcodes`
+--
+ALTER TABLE `qrcodes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `qrcode_alls`
+--
+ALTER TABLE `qrcode_alls`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `qrcode_checks`
+--
+ALTER TABLE `qrcode_checks`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `stu_lists`
 --
 ALTER TABLE `stu_lists`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `stu_lists_student_id_unique` (`student_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `subjects`
@@ -336,8 +403,7 @@ ALTER TABLE `subjects`
 -- Indexes for table `subject_stus`
 --
 ALTER TABLE `subject_stus`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `subject_stus_student_id_unique` (`student_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -374,7 +440,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -383,28 +449,46 @@ ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `qrcodes`
+--
+ALTER TABLE `qrcodes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `qrcode_alls`
+--
+ALTER TABLE `qrcode_alls`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `qrcode_checks`
+--
+ALTER TABLE `qrcode_checks`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `stu_lists`
 --
 ALTER TABLE `stu_lists`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `subject_stus`
 --
 ALTER TABLE `subject_stus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `years`

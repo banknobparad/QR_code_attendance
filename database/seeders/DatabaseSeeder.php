@@ -53,13 +53,6 @@ class DatabaseSeeder extends Seeder
                 ['name' => 'นักศึกษาชั้นปีที่ 3', 'year' => '3'],
                 ['name' => 'นักศึกษาชั้นปีที่ 4', 'year' => '4'],
             ]);
-
-            // //craate subject (วิชาเรียน)
-            // Subject::insert([
-            //     ['teacher_id' => '2', 'subject_id' => '123', 'subject_name' => 'python',],
-            //     ['teacher_id' => '2', 'subject_id' => '456', 'subject_name' => 'c++',],
-            //     ['teacher_id' => '2', 'subject_id' => '789', 'subject_name' => 'laravel',]
-            // ]);
         }
 
     }

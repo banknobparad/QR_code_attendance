@@ -41,11 +41,11 @@ class SubjectController extends Controller
         $this->validate(
             $request,
             [
-                // 'select_file'  => 'required|mimes:xls,xlsx'
+                'select_file'  => 'required'
             ],
 
             [
-                // 'select_file.required' => __('.'),
+                'select_file.required' => __('โปรดเลือกไฟล์'),
             ]
         );
 
@@ -68,8 +68,8 @@ class SubjectController extends Controller
     {
         $request->validate([
             // 'No'   => 'required',
-            // 'Name' => 'required',
-            // 'Sex'  => 'required',
+            'Name' => 'required',
+            'Student_id'  => 'required',
             // 'Age'  => 'required'
         ]);
         if ($request->get('Student_id')) {
@@ -93,6 +93,7 @@ class SubjectController extends Controller
 
     public function importUpdate(Request $request)
     {
+
         $importUpdate = [
             'teacher_id' => auth()->user()->id,
             'id'    =>    $request->idUpdate,
@@ -112,6 +113,19 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'subject_id' => 'required',
+            'subject_name'  => 'required',
+            'branch_id'  => 'required',
+            'year_id'  => 'required',
+        ],
+        [
+            'subject_id.required' => __('กรุณากรอกรหัสวิชา'),
+            'subject_name.required' => __('กรุณากรอกชื่อวิชา'),
+            'branch_id.required' => __('กรุณากรอกขาสา'),
+            'year_id.required' => __('กรุณากรอกชั้นปี'),
+        ]
+    );
 
         $input_subject = [
             'teacher_id' => auth()->user()->id,

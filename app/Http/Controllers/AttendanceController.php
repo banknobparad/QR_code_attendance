@@ -261,6 +261,6 @@ class AttendanceController extends Controller
         $qrcode->save();
 
         // สามารถส่งคืนข้อความหรือสถานะการทำงานอื่นๆ กลับไปยัง client ตามความเหมาะสม
-        return redirect()->back()->with('success', 'อัปเดตข้อมูลเรียบร้อย');
+        return redirect()->route('report.home')->with('success', 'อัปเดตข้อมูลเรียบร้อย');
     }
 }

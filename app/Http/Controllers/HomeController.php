@@ -26,7 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::user()->role === 'Administrator') {
-            $users = User::all();
+            $users = User::where('role', '!=', 'Administrator')->get();
         } else {
             $users = User::where('id', Auth::id())->get();
         }
@@ -34,5 +34,4 @@ class HomeController extends Controller
         // dd($users->toArray());
         return view('home', compact('users'));
     }
-
 }
